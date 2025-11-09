@@ -1,0 +1,1 @@
+importScripts('https://cdn.jsdelivr.net/gh/scramjetorg/scramjet@latest/dist/scramjet.sync.js');

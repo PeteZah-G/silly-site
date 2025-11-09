@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silly funness</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SCRAMJET FROM CDN (UNBLOCKED) -->
+    <script src="https://cdn.jsdelivr.net/gh/scramjetorg/scramjet@latest/dist/scramjet.all.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <style>
+        /* [ALL YOUR ORIGINAL STYLES HERE — KEEP THEM] */
+        html, body, .content, #game-view, #game-iframe {
+            height: 100% !important; margin: 0 !important; padding: 0 !important;
+        }
+        :root { --color-accent-purple: #8b5cf6; --color-text: #f3f4f6; }
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; overflow: hidden; color: var(--color-text); }
+        .content { flex-grow: 1; display: flex; flex-direction: column; }
+        #game-box-wrapper { padding: 1.5rem; margin: 1rem; box-sizing: border-box; }
+        .five-box-row { display: flex; width: 100%; gap: 16px; justify-content: center; }
+        .game-box { flex: 1; max-width: 220px; height: 192px; background: rgba(17, 24, 39, 0.85); border: 2px solid var(--color-accent-purple); border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s; }
+        .game-box:hover { transform: translateY(-8px) scale(1.05); box-shadow: 0 0 30px 6px var(--color-accent-purple); }
+        .game-box img { max-width: 90%; max-height: 68%; object-fit: contain; border-radius: 8px; }
+        .game-title { font-size: 0.95rem; font-weight: bold; text-align: center; margin-top: 8px; color: var(--color-text); }
+        .hidden-view { display: none !important; }
+        #game-view { flex-grow: 1; display: flex; flex-direction: column; background: rgba(55, 65, 81, 0.8); position: relative; }
+        #game-iframe { flex-grow: 1; width: 100%; border: none; background: #111827; }
+        #fullscreen-btn-game { position: absolute; top: 1rem; right: 1rem; background: rgba(139, 92, 246, 0.8); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; }
+        #fullscreen-btn-game:hover { background: var(--color-accent-purple); transform: scale(1.1); }
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; opacity: 0.6; }
+        #home-page-view { display: flex; flex-direction: row; align-items: center; justify-content: space-between; flex-grow: 1; padding: 2rem; gap: 3rem; }
+        .home-left { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; }
+        .home-right { flex: 1; display: flex; justify-content: center; }
+        .typewriter-container { font-size: 2.8rem; font-weight: 700; text-align: center; }
+        .gradient-word { background: linear-gradient(90deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        .play-btn { background: linear-gradient(45deg, #8b5cf6, #ec4899); color: white; font-weight: bold; padding: 1.25rem 3rem; border-radius: 9999px; font-size: 1.8rem; cursor: pointer; box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4); transition: transform 0.2s; }
+        .play-btn:hover { transform: scale(1.1); }
+        .showcase-game { width: 100%; max-width: 420px; background: rgba(55, 65, 81, 0.9); border: 3px solid var(--color-accent-purple); border-radius: 16px; overflow: hidden; cursor: pointer; }
+        .showcase-game:hover { transform: scale(1.08); }
+        .showcase-game img { width: 100%; height: 100%; max-height: 400px; object-fit: cover; }
+        .showcase-title { padding: 1.2rem; font-weight: 800; font-size: 1.6rem; color: var(--color-text); }
+        .search-container { margin: 1rem auto; max-width: 500px; position: relative; }
+        #game-search { width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border-radius: 9999px; border: 2px solid var(--color-accent-purple); background: rgba(17, 24, 39, 0.8); color: var(--color-text); }
+        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--color-accent-purple); }
+        .nav-button.proxy-tab { color: #fbbf24 !important; font-size: 0.75rem !important; font-weight: bold; padding: 0.5rem 0.8rem !important; border: 1px solid #fbbf24; border-radius: 6px; opacity: 0.8; }
+        .nav-button.proxy-tab:hover { opacity: 1; background: rgba(251, 191, 36, 0.2); }
+        .nav-button.proxy-tab::after { content: " (WIP)"; color: #fbbf24; font-size: 0.6rem; vertical-align: super; }
+        @media (max-width: 768px) { #home-page-view { flex-direction: column; text-align: center; } .typewriter-container { font-size: 1.9rem; } }
+    </style>
+</head>
+<body data-theme="dark">
+    <canvas id="particle-canvas"></canvas>
+    <div class="content">
+        <!-- NAV -->
+        <nav class="bg-gray-800 bg-opacity-90 backdrop-blur-md shadow-xl border-b-2 border-purple-500/50 flex-shrink-0">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-end h-16 items-center">
+                    <div class="flex items-center space-x-2">
+                        <button class="nav-button font-medium px-6 py-2 rounded-lg transition-all duration-200" data-view="home-page">Home</button>
+                        <button class="nav-button font-medium px-6 py-2 rounded-lg transition-all duration-200" data-view="games">Games</button>
+                        <button class="nav-button font-medium px-6 py-2 rounded-lg transition-all duration-200" data-view="settings">Settings</button>
+                        <button class="nav-button proxy-tab" data-view="proxy">proxy</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- HOME -->
+        <div id="home-page-view" class="view">
+            <div class="home-left">
+                <div class="typewriter-container">
+                    <span class="static-text">Welcome to</span>
+                    <span id="gradient-word" class="gradient-word"></span>
+                </div>
+                <button onclick="showView('games')" class="play-btn">Play Games</button>
+            </div>
+            <div class="home-right">
+                <div id="game-showcase" class="showcase-game">
+                    <img id="showcase-img" src="" alt="">
+                    <div id="showcase-title" class="showcase-title"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAMES -->
+        <div id="games-view" class="view hidden-view pt-6 h-full overflow-y-auto">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="game-search" placeholder="Search games..." autocomplete="off">
+            </div>
+            <div id="game-box-wrapper" class="mx-auto space-y-6">
+                <!-- Add your games here -->
+            </div>
+        </div>
+
+        <!-- GAME VIEW -->
+        <div id="game-view" class="view hidden-view">
+            <button id="fullscreen-btn-game" title="Fullscreen">Fullscreen</button>
+            <iframe id="game-iframe" src="" allow="fullscreen"></iframe>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="settings-view" class="view hidden-view p-8 h-full overflow-y-auto">
+            <!-- Your settings -->
+        </div>
+
+        <!-- PROXY VIEW -->
+        <div id="proxy-view" class="view hidden-view p-8 text-center">
+            <h1 class="text-4xl font-bold mb-6" style="color: #fbbf24;">proxy</h1>
+            <p class="text-lg text-gray-300 mb-8">Unblock <strong>YouTube, Discord, Spotify</strong></p>
+            <div class="max-w-md mx-auto">
+                <input type="text" id="proxy-url" placeholder="youtube.com" class="w-full p-3 rounded-lg bg-gray-800 text-white border border-yellow-500 focus:outline-none focus:border-yellow-400 mb-4">
+                <button id="go-proxy" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 rounded-lg transition">
+                    Unblock
+                </button>
+            </div>
+            <p class="text-xs text-green-400 mt-4">Scramjet Powered</p>
+        </div>
+    </div>
+
+    <script>
+      window.addEventListener('load', async () => {
+        // Wait for Scramjet to load
+        await new Promise(resolve => {
+          if (window.$scramjetLoadController) return resolve();
+          const check = setInterval(() => {
+            if (window.$scramjetLoadController) {
+              clearInterval(check);
+              resolve();
+            }
+          }, 50);
+        });
+
+        const views = {
+          'home-page': document.getElementById('home-page-view'),
+          'games': document.getElementById('games-view'),
+          'game': document.getElementById('game-view'),
+          'settings': document.getElementById('settings-view'),
+          'proxy': document.getElementById('proxy-view')
+        };
+
+        const navButtons = document.querySelectorAll('.nav-button');
+        const gameIframe = document.getElementById('game-iframe');
+
+        // Scramjet from CDN
+        const { ScramjetController } = $scramjetLoadController();
+        const scramjet = new ScramjetController({
+          files: {
+            wasm: "https://cdn.jsdelivr.net/gh/scramjetorg/scramjet@latest/dist/scramjet.wasm.wasm",
+            all: "https://cdn.jsdelivr.net/gh/scramjetorg/scramjet@latest/dist/scramjet.all.js",
+            sync: "https://cdn.jsdelivr.net/gh/scramjetorg/scramjet@latest/dist/scramjet.sync.js",
+          }
+        });
+        await scramjet.init();
+
+        // Service Worker from CDN
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('https://cdn.jsdelivr.net/gh/scramjetorg/scramjet@latest/dist/sw.js');
+        }
+
+        // Proxy button
+        document.getElementById('go-proxy').addEventListener('click', () => {
+          let url = document.getElementById('proxy-url').value.trim();
+          if (!url) return alert('Enter URL');
+          if (!url.includes('://')) url = 'https://' + url;
+          const encoded = scramjet.codec.encode(url);
+          gameIframe.src = `https://scramjetorg.github.io/scramjet-proxy/scram/${encoded}`;
+          showView('game');
+        });
+
+        // Typewriter
+        const gradientWord = document.getElementById('gradient-word');
+        const words = ['silly.', 'freedom.', 'beauty.', 'peace.', 'amazement.', 'fun.'];
+        let wordIndex = 0, charIndex = 0, isDeleting = false;
+        const type = () => {
+          const currentWord = words[wordIndex];
+          const displayText = isDeleting ? currentWord.substring(0, charIndex - 1) : currentWord.substring(0, charIndex + 1);
+          gradientWord.textContent = displayText;
+          let typeSpeed = 120;
+          if (isDeleting) typeSpeed /= 2;
+          if (!isDeleting && charIndex === currentWord.length) { typeSpeed = 2500; isDeleting = true; }
+          else if (isDeleting && charIndex === 0) { isDeleting = false; wordIndex = (wordIndex + 1) % words.length; typeSpeed = 500; }
+          charIndex = isDeleting ? charIndex - 1 : charIndex + 1;
+          setTimeout(type, typeSpeed);
+        };
+        type();
+
+        // View switcher
+        window.showView = function(name) {
+          Object.values(views).forEach(v => v.classList.add('hidden-view'));
+          views[name].classList.remove('hidden-view');
+          navButtons.forEach(b => {
+            const isActive = b.dataset.view === name;
+            b.classList.toggle('bg-purple-600/30', isActive && !b.classList.contains('proxy-tab'));
+            b.classList.toggle('text-white', isActive);
+            b.classList.toggle('text-gray-300', !isActive && !b.classList.contains('proxy-tab'));
+          });
+        };
+        navButtons.forEach(btn => btn.addEventListener('click', () => showView(btn.dataset.view)));
+      });
+    </script>
+</body>
+</html>
