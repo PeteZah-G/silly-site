@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Silly funness</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/scram/scramjet.all.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     <style>
         html, body, .content, #game-view, #game-iframe {
@@ -156,7 +157,7 @@
             position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
             color: var(--color-accent-purple); font-size: 1.1rem;
         }
-        /* PROXY TAB STYLE */
+        /* PROXY TAB */
         .nav-button.proxy-tab {
             color: #fbbf24 !important;
             font-size: 0.75rem !important;
@@ -181,38 +182,28 @@
 <body data-theme="dark">
     <canvas id="particle-canvas"></canvas>
     <div class="content">
-        <!-- NAV WITH PROXY TAB -->
+        <!-- NAV -->
         <nav class="bg-gray-800 bg-opacity-90 backdrop-blur-md shadow-xl border-b-2 border-purple-500/50 flex-shrink-0">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-end h-16 items-center">
                     <div class="flex items-center space-x-2">
-                        <button class="nav-button font-medium px-6 py-2 rounded-lg transition-all duration-200" data-view="home-page">
-                            Home
-                        </button>
-                        <button class="nav-button font-medium px-6 py-2 rounded-lg transition-all duration-200" data-view="games">
-                            Games
-                        </button>
-                        <button class="nav-button font-medium px-6 py-2 rounded-lg transition-all duration-200" data-view="settings">
-                            Settings
-                        </button>
-                        <button class="nav-button proxy-tab" data-view="proxy">
-                            proxy
-                        </button>
+                        <button class="nav-button font-medium px-6 py-2 rounded-lg transition-all duration-200" data-view="home-page">Home</button>
+                        <button class="nav-button font-medium px-6 py-2 rounded-lg transition-all duration-200" data-view="games">Games</button>
+                        <button class="nav-button font-medium px-6 py-2 rounded-lg transition-all duration-200" data-view="settings">Settings</button>
+                        <button class="nav-button proxy-tab" data-view="proxy">proxy</button>
                     </div>
                 </div>
             </div>
         </nav>
 
-        <!-- HOME VIEW -->
+        <!-- HOME -->
         <div id="home-page-view" class="view">
             <div class="home-left">
                 <div class="typewriter-container">
                     <span class="static-text">Welcome to</span>
                     <span id="gradient-word" class="gradient-word"></span>
                 </div>
-                <button onclick="showView('games')" class="play-btn">
-                    Play Games
-                </button>
+                <button onclick="showView('games')" class="play-btn">Play Games</button>
             </div>
             <div class="home-right">
                 <div id="game-showcase" class="showcase-game">
@@ -222,18 +213,18 @@
             </div>
         </div>
 
-        <!-- GAMES VIEW -->
+        <!-- GAMES -->
         <div id="games-view" class="view hidden-view pt-6 h-full overflow-y-auto">
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" id="game-search" placeholder="Search games..." autocomplete="off">
             </div>
             <div id="game-box-wrapper" class="mx-auto space-y-6">
-                <!-- Your games go here -->
+                <!-- Your games here -->
             </div>
         </div>
 
-        <!-- GAME IFRAME -->
+        <!-- GAME VIEW -->
         <div id="game-view" class="view hidden-view">
             <button id="fullscreen-btn-game" title="Fullscreen">Fullscreen</button>
             <iframe id="game-iframe" src="" allow="fullscreen"></iframe>
@@ -241,24 +232,23 @@
 
         <!-- SETTINGS -->
         <div id="settings-view" class="view hidden-view p-8 h-full overflow-y-auto">
-            <!-- Settings content -->
+            <!-- Settings -->
         </div>
 
         <!-- PROXY VIEW -->
         <div id="proxy-view" class="view hidden-view p-8 text-center">
             <h1 class="text-4xl font-bold mb-6" style="color: #fbbf24;">proxy</h1>
-            <p class="text-lg text-gray-300 mb-8">Unblock <strong>YouTube, Discord, Spotify</strong> with Scramjet</p>
+            <p class="text-lg text-gray-300 mb-8">Unblock <strong>YouTube, Discord, Spotify</strong></p>
             <div class="max-w-md mx-auto">
                 <input type="text" id="proxy-url" placeholder="youtube.com" class="w-full p-3 rounded-lg bg-gray-800 text-white border border-yellow-500 focus:outline-none focus:border-yellow-400 mb-4">
                 <button id="go-proxy" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 rounded-lg transition">
                     Unblock
                 </button>
             </div>
-            <p class="text-xs text-green-400 mt-4">Powered by Scramjet — Works on School WiFi</p>
+            <p class="text-xs text-green-400 mt-4">Scramjet Powered</p>
         </div>
     </div>
 
-    <!-- SCRAMJET + PROXY SCRIPT -->
     <script>
       window.addEventListener('load', async () => {
         const views = {
@@ -271,7 +261,7 @@
         const navButtons = document.querySelectorAll('.nav-button');
         const gameIframe = document.getElementById('game-iframe');
 
-        // === SCRAMJET INIT ===
+        // SCRAMJET
         const { ScramjetController } = $scramjetLoadController();
         const scramjet = new ScramjetController({
           files: {
@@ -285,17 +275,17 @@
           navigator.serviceWorker.register('/sw.js');
         }
 
-        // === PROXY GO BUTTON ===
+        // PROXY BUTTON
         document.getElementById('go-proxy').addEventListener('click', () => {
           let url = document.getElementById('proxy-url').value.trim();
-          if (!url) return alert('Enter a URL');
+          if (!url) return alert('Enter URL');
           if (!url.includes('://')) url = 'https://' + url;
           const encoded = scramjet.codec.encode(url);
           gameIframe.src = `/scram/${encoded}`;
           showView('game');
         });
 
-        // === TYPEWRITER EFFECT ===
+        // TYPEWRITER
         const gradientWord = document.getElementById('gradient-word');
         const words = ['silly.', 'freedom.', 'beauty.', 'peace.', 'amazement.', 'fun.'];
         let wordIndex = 0, charIndex = 0, isDeleting = false;
@@ -312,7 +302,6 @@
         };
         type();
 
-        // === VIEW SWITCHER ===
         window.showView = function(name) {
           Object.values(views).forEach(v => v.classList.add('hidden-view'));
           views[name].classList.remove('hidden-view');
