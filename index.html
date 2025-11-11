@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Silly Education</title>
+    <title>Silly funness</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     <style>
@@ -21,7 +21,7 @@
             display: flex; flex-direction: column; color: var(--color-text);
             transition: background 1s ease;
         }
-        .content { 
+        .content {
             flex-grow: 1; display: flex; flex-direction: column; overflow-y: visible;
         }
         #game-box-wrapper {
@@ -33,8 +33,9 @@
         .game-box {
             flex: 1 1 200px; max-width: 220px; height: 192px; background-color: rgba(17, 24, 39, 0.85);
             border: 2px solid var(--color-accent-purple); border-radius: 12px; display: flex;
-            flex-direction: column; justify-content: center; align-items: center; cursor: pointer; overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s; position: relative; backdrop-filter: blur(6px);
+            flex-direction: column; justify-content: center; align-items: center; overflow: hidden;
+            position: relative; backdrop-filter: blur(6px); transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
         }
         .game-box:hover {
             transform: translateY(-8px) scale(1.05);
@@ -96,7 +97,7 @@
         }
         #home-page-view {
             display: flex; flex-direction: row; align-items: center; justify-content: space-between;
-            flex-grow: 1; padding: 2rem; gap: 3rem;
+            flex-grow: 1; padding: 2rem; gap: 3rem; position: relative;
         }
         @media (max-width: 768px) {
             #home-page-view { flex-direction: column; text-align: center; gap: 2rem; }
@@ -126,8 +127,20 @@
             transition: transform 0.2s; position: relative; overflow: hidden;
             animation: pulseGlow 2s infinite, gradientShift 6s infinite;
         }
-        .play-btn:hover { transform: scale(1.1); }
-        .play-btn::before {
+        .about-blank-btn {
+            background: linear-gradient(45deg, #8b5cf6, #ec4899);
+            color: white; font-weight: bold; padding: 0.75rem 2rem; border-radius: 9999px;
+            font-size: 1rem; cursor: pointer; box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+            transition: transform 0.2s; position: relative; overflow: hidden;
+            animation: pulseGlow 2s infinite, gradientShift 6s infinite;
+            position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%);
+        }
+        @media (max-width: 768px) {
+            .about-blank-btn {
+                position: static; transform: none; margin-top: 1rem;
+            }
+        }
+        .play-btn::before, .about-blank-btn::before {
             content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             transition: 0.7s; animation: shine 3s infinite;
@@ -145,11 +158,12 @@
             0% { left: -100%; }
             100% { left: 100%; }
         }
-        .play-btn { background-size: 200% 200%; }
+        .play-btn, .about-blank-btn { background-size: 200% 200%; }
         .showcase-game {
             width: 100%; max-width: 420px; background: rgba(55, 65, 81, 0.9); border: 3px solid var(--color-accent-purple);
-            border-radius: 16px; overflow: hidden; cursor: pointer; transition: transform 0.4s, box-shadow 0.4s;
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5); text-align: center; display: flex; flex-direction: column;
+            border-radius: 12px; overflow: hidden; box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            text-align: center; display: flex; flex-direction: column; transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
         }
         .showcase-game:hover {
             transform: scale(1.08);
@@ -207,11 +221,9 @@
             100% { filter: hue-rotate(60deg) brightness(1.2); }
         }
         .shooting-star {
-            position: fixed; width: 2px; height: 2px; background啪
-
-System: background: white;
+            position: fixed; width: 2px; height: 2px; background: white;
             border-radius: 50%; box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8);
-            pointer-events: none; z-index: 5; opacity: 0;
+            pointer-events: none; z-index: 5;
         }
         .shooting-star::before {
             content: ''; position: absolute; top: 0; left: -100px;
@@ -245,20 +257,6 @@ System: background: white;
             max-height: calc(100vh - 4rem); scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
             overflow-y: auto; overflow-x: hidden;
         }
-        #game-box-wrapper {
-            padding: 1rem; margin: 0.5rem; max-width: 100%; space-y-4;
-        }
-        .five-box-row {
-            gap: 8px;
-        }
-        @media (max-width: 768px) {
-            .game-box {
-                height: 100px; padding: 8px;
-            }
-            .game-title {
-                font-size: 0.8rem;
-            }
-        }
     </style>
 </head>
 <body data-theme="dark">
@@ -285,10 +283,11 @@ System: background: white;
             </div>
             <div class="home-right">
                 <div id="game-showcase" class="showcase-game">
-                    <img id="showcase-img" src="" alt="" loading="lazy">
+                    <img id="showcase-img" src="" alt="">
                     <div id="showcase-title" class="showcase-title"></div>
                 </div>
             </div>
+            <button id="home-about-blank-btn" class="about-blank-btn">Open in about:blank</button>
         </div>
         <div id="games-view" class="view hidden-view pt-6 h-full overflow-y-auto overflow-x-hidden">
             <div class="search-container">
@@ -298,100 +297,72 @@ System: background: white;
             <div id="game-box-wrapper" class="mx-auto space-y-4">
                 <div class="five-box-row">
                     <div class="game-box" data-url="https://iisilly1059.github.io/slope/index.html" data-title="Slope" data-img="https://i.imgur.com/1oNbzew.png">
-                        <img src="https://i.imgur.com/1oNbzew.png" alt="Slope" loading="lazy">
+                        <img src="https://i.imgur.com/1oNbzew.png" alt="Slope">
                         <div class="game-title">Slope</div>
                     </div>
                     <div class="game-box" data-url="https://iisilly1059.github.io/slope-2/index.html" data-title="Slope 2" data-img="https://i.imgur.com/9QZQMsl.jpeg">
-                        <img src="https://i.imgur.com/9QZQMsl.jpeg" alt="Slope 2" loading="lazy">
+                        <img src="https://i.imgur.com/9QZQMsl.jpeg" alt="Slope 2">
                         <div class="game-title">Slope 2</div>
                     </div>
                     <div class="game-box" data-url="https://iisilly1059.github.io/stickman-hook/index.html" data-title="Stickman Hook" data-img="https://i.imgur.com/qB79Rsl.jpeg">
-                        <img src="https://i.imgur.com/qB79Rsl.jpeg" alt="Stickman Hook" loading="lazy">
+                        <img src="https://i.imgur.com/qB79Rsl.jpeg" alt="Stickman Hook">
                         <div class="game-title">Stickman Hook</div>
                     </div>
                     <div class="game-box" data-url="https://iisilly1059.github.io/vex-3/index.html" data-title="Vex 3" data-img="https://i.imgur.com/sLAF7pw.png">
-                        <img src="https://i.imgur.com/sLAF7pw.png" alt="Vex 3" loading="lazy">
+                        <img src="https://i.imgur.com/sLAF7pw.png" alt="Vex 3">
                         <div class="game-title">Vex 3</div>
                     </div>
                     <div class="game-box" data-url="https://iisilly1059.github.io/space-company/index.html" data-title="Space Company" data-img="https://i.imgur.com/36Z4TBx.png">
-                        <img src="https://i.imgur.com/36Z4TBx.png" alt="Space Company" loading="lazy">
+                        <img src="https://i.imgur.com/36Z4TBx.png" alt="Space Company">
                         <div class="game-title">Space Company</div>
                     </div>
                 </div>
                 <div class="five-box-row">
                     <div class="game-box" data-url="https://iisilly1059.github.io/tiny-fishing/index.html" data-title="Tiny Fishing" data-img="https://i.imgur.com/gMFUKf9.png">
-                        <img src="https://i.imgur.com/gMFUKf9.png" alt="Tiny Fishing" loading="lazy">
+                        <img src="https://i.imgur.com/gMFUKf9.png" alt="Tiny Fishing">
                         <div class="game-title">Tiny Fishing</div>
                     </div>
                     <div class="game-box" data-url="https://iisilly1059.github.io/paper.io-2/index.html" data-title="Paper.io 2" data-img="https://i.imgur.com/yOt00SS.png">
-                        <img src="https://i.imgur.com/yOt00SS.png" alt="Paper.io 2" loading="lazy">
+                        <img src="https://i.imgur.com/yOt00SS.png" alt="Paper.io 2">
                         <div class="game-title">Paper.io 2</div>
                     </div>
                     <div class="game-box" data-url="https://krunker.io" data-title="Krunker.io" data-img="https://i.imgur.com/krunker.png">
-                        <img src="https://i.imgur.com/krunker.png" alt="Krunker.io" loading="lazy">
+                        <img src="https://i.imgur.com/krunker.png" alt="Krunker.io">
                         <div class="game-title">Krunker.io</div>
                     </div>
                     <div class="game-box" data-url="https://iisilly1059.github.io/n-gon/index.html" data-title="N-gon" data-img="https://i.imgur.com/Y7jH6PT.png">
-                        <img src="https://i.imgur.com/Y7jH6PT.png" alt="N-gon" loading="lazy">
+                        <img src="https://i.imgur.com/Y7jH6PT.png" alt="N-gon">
                         <div class="game-title">N-gon</div>
                     </div>
                     <div class="game-box" data-url="https://iisilly1059.github.io/knife-master/index.html" data-title="Knife Master" data-img="https://i.imgur.com/tmYfHFh.jpeg">
-                        <img src="https://i.imgur.com/tmYfHFh.jpeg" alt="Knife Master" loading="lazy">
+                        <img src="https://i.imgur.com/tmYfHFh.jpeg" alt="Knife Master">
                         <div class="game-title">Knife Master</div>
                     </div>
                 </div>
                 <div class="five-box-row">
-                    <div class="game-box" data-url="https://iisilly1059.github.io/idle-breakout/index.html" data-title="Idle Breakout" data-img="https://i.imgur.com/w0fAOOa.png">
-                        <img src="https://i.imgur.com/w0fAOOa.png" alt="Idle Breakout" loading="lazy">
-                        <div class="game-title">Idle Breakout</div>
-                    </div>
-                    <div class="game-box" data-url="https://iisilly1059.github.io/ducklife/index.html" data-title="Duck Life" data-img="https://i.imgur.com/B1PzauW.png">
-                        <img src="https://i.imgur.com/B1PzauW.png" alt="Duck Life" loading="lazy">
-                        <div class="game-title">Duck Life</div>
-                    </div>
-                    <div class="game-box" data-url="https://iisilly1059.github.io/exo/" data-title="Exo" data-img="https://i.imgur.com/wP3RU7p.jpeg">
-                        <img src="https://i.imgur.com/wP3RU7p.jpeg" alt="Exo" loading="lazy">
-                        <div class="game-title">Exo</div>
-                    </div>
-                    <div class="game-box" data-url="https://iisilly1059.github.io/doodle-jump/" data-title="Doodle Jump" data-img="https://i.imgur.com/CB6eh4k.png">
-                        <img src="https://i.imgur.com/CB6eh4k.png" alt="Doodle Jump" loading="lazy">
-                        <div class="game-title">Doodle Jump</div>
-                    </div>
-                    <div class="game-box" data-url="https://iisilly1059.github.io/1v1.lol/" data-title="1v1.lol" data-img="https://i.imgur.com/KPPFuwh.jpeg">
-                        <img src="https://i.imgur.com/KPPFuwh.jpeg" alt="1v1.lol" loading="lazy">
-                        <div class="game-title">1v1.lol</div>
-                    </div>
-                </div>
-                <div class="five-box-row">
-                    <!-- Game 1: The Heist -->
-                     <div class="game-box" data-url="https://iisilly1059.github.io/the-heist/" data-title="The Heist" data-img="https://i.imgur.com/ca8BpFt.jpeg">
+                    <div class="game-box" data-url="https://iisilly1059.github.io/the-heist/" data-title="The Heist" data-img="https://i.imgur.com/ca8BpFt.jpeg">
                         <img src="https://i.imgur.com/ca8BpFt.jpeg" alt="The Heist">
                         <div class="game-title">The Heist</div>
                     </div>
-                    <!-- Game 2: The Hotel -->
-                     <div class="game-box" data-url="https://iisilly1059.github.io/the-hotel/" data-title="The Hotel" data-img="https://i.imgur.com/pd82wYR.png">
+                    <div class="game-box" data-url="https://iisilly1059.github.io/the-hotel/" data-title="The Hotel" data-img="https://i.imgur.com/pd82wYR.png">
                         <img src="https://i.imgur.com/pd82wYR.png" alt="The Hotel">
                         <div class="game-title">The Hotel</div>
                     </div>
-                    <!-- Game 3: Tiny Islands -->
-                     <div class="game-box" data-url="https://iisilly1059.github.io/tiny-islands/" data-title="Tiny Islands" data-img="https://i.imgur.com/Wk8TvYd.png">
+                    <div class="game-box" data-url="https://iisilly1059.github.io/tiny-islands/" data-title="Tiny Islands" data-img="https://i.imgur.com/Wk8TvYd.png">
                         <img src="https://i.imgur.com/Wk8TvYd.png" alt="Tiny Islands">
                         <div class="game-title">Tiny Islands</div>
                     </div>
-                    <!-- Game 4: Elastic Man -->
-                     <div class="game-box" data-url="https://iisilly1059.github.io/elastic-man/" data-title="Elastic Man" data-img="https://i.imgur.com/q8ASag2.jpeg">
+                    <div class="game-box" data-url="https://iisilly1059.github.io/elastic-man/" data-title="Elastic Man" data-img="https://i.imgur.com/q8ASag2.jpeg">
                         <img src="https://i.imgur.com/q8ASag2.jpeg" alt="Elastic Man">
                         <div class="game-title">Elastic Man</div>
                     </div>
-                    <!-- Game 5: Drive Mad -->
-                     <div class="game-box" data-url="https://iisilly1059.github.io/drive-mad/" data-title="Drive Mad" data-img="https://i.imgur.com/lEk2D8K.jpeg">
+                    <div class="game-box" data-url="https://iisilly1059.github.io/drive-mad/" data-title="Drive Mad" data-img="https://i.imgur.com/lEk2D8K.jpeg">
                         <img src="https://i.imgur.com/lEk2D8K.jpeg" alt="Drive Mad">
                         <div class="game-title">Drive Mad</div>
-                        </div>
                     </div>
                 </div>
             </div>
-            
+        </div>
         <div id="game-view" class="view hidden-view">
             <button id="fullscreen-btn-game" title="Fullscreen"><i class="fas fa-expand"></i></button>
             <iframe id="game-iframe" src="" allow="fullscreen"></iframe>
@@ -431,7 +402,7 @@ System: background: white;
                     <div id="panic-options" class="space-y-3 hidden">
                         <div>
                             <label class="block text-sm mb-1">Panic Key</label>
-                            <input type="text" id="panic-key-input" class="panic-input" placeholder="Press key..." />
+                            <input type="text" id="panic-key-input" class="panic-input" placeholder="Press a key (A-Z)..." />
                         </div>
                         <div>
                             <label class="block text-sm mb-1">Redirect URL</label>
@@ -471,6 +442,7 @@ System: background: white;
             const showcaseTitle = document.getElementById('showcase-title');
             const searchInput = document.getElementById('game-search');
             const gradientWord = document.getElementById('gradient-word');
+            const gameBoxWrapper = document.getElementById('game-box-wrapper');
             const words = ['silly.', 'freedom.', 'beauty.', 'peace.', 'amazement.', 'fun.'];
             let wordIndex = 0;
             let charIndex = 0;
@@ -478,8 +450,13 @@ System: background: white;
             let typingTimeout;
             const type = () => {
                 const currentWord = words[wordIndex];
-                const displayText = isDeleting ? currentWord.substring(0, charIndex - 1) : currentWord.substring(0, charIndex + 1);
-                gradientWord.textContent = displayText;
+                if (isDeleting) {
+                    gradientWord.textContent = currentWord.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    gradientWord.textContent = currentWord.substring(0, charIndex + 1);
+                    charIndex++;
+                }
                 let typeSpeed = 120;
                 if (isDeleting) typeSpeed /= 2;
                 if (!isDeleting && charIndex === currentWord.length) {
@@ -490,7 +467,6 @@ System: background: white;
                     wordIndex = (wordIndex + 1) % words.length;
                     typeSpeed = 500;
                 }
-                charIndex = isDeleting ? charIndex - 1 : charIndex + 1;
                 typingTimeout = setTimeout(type, typeSpeed);
             };
             type();
@@ -505,12 +481,8 @@ System: background: white;
                 showcaseImg.src = img;
                 showcaseTitle.textContent = title;
                 showcase.onclick = () => {
-                    if (url.includes('krunker.io')) {
-                        window.open(url, '_blank');
-                    } else {
-                        gameIframe.src = url;
-                        showView('game');
-                    }
+                    gameIframe.src = url;
+                    showView('game');
                 };
                 currentShowcaseIndex = (currentShowcaseIndex + 1) % gameBoxes.length;
             };
@@ -520,25 +492,27 @@ System: background: white;
             };
             let shootingStarInterval = null;
             const createShootingStar = () => {
-                if (document.getElementById('home-page-view').classList.contains('hidden-view')) return;
+                if (views['home-page'].classList.contains('hidden-view')) return;
                 const star = document.createElement('div');
                 star.className = 'shooting-star';
                 const startX = Math.random() * window.innerWidth * 0.6;
                 const startY = Math.random() * window.innerHeight * 0.4;
-                const endX = startX + 300 + Math.random() * 200;
-                const endY = startY + 200 + Math.random() * 150;
-                const duration = 800 + Math.random() * 400;
                 star.style.left = `${startX}px`;
                 star.style.top = `${startY}px`;
                 document.body.appendChild(star);
-                star.animate([
-                    { opacity: 0, transform: 'translate(0, 0)' },
-                    { opacity: 1, transform: `translate(${endX - startX}px, ${endY - startY}px)` },
-                    { opacity: 0, transform: `translate(${endX - startX + 50}px, ${endY - startY + 50}px)` }
-                ], {
-                    duration: duration,
-                    easing: 'cubic-bezier(0.2, 0, 0.8, 1)'
-                }).onfinish = () => star.remove();
+                let moveX = 0;
+                let moveY = 0;
+                const moveStar = () => {
+                    moveX += 5;
+                    moveY += 3.5;
+                    star.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                    if (moveX < 350 && moveY < 250) {
+                        requestAnimationFrame(moveStar);
+                    } else {
+                        star.remove();
+                    }
+                };
+                moveStar();
             };
             const startShootingStars = () => {
                 if (shootingStarInterval) clearInterval(shootingStarInterval);
@@ -550,217 +524,324 @@ System: background: white;
                 document.querySelectorAll('.shooting-star').forEach(s => s.remove());
             };
             window.showView = function(name) {
-                Object.values(views).forEach(v => v.classList.add('hidden-view'));
+                for (let view in views) {
+                    views[view].classList.add('hidden-view');
+                }
                 views[name].classList.remove('hidden-view');
-                navButtons.forEach(b => {
-                    const isActive = b.dataset.view === name;
-                    b.classList.toggle('bg-purple-600/30', isActive);
-                    b.classList.toggle('text-white', isActive);
-                    b.classList.toggle('text-gray-300', !isActive);
+                navButtons.forEach(btn => {
+                    btn.classList.remove('bg-purple-600', 'text-white');
+                    btn.classList.add('text-gray-300', 'hover:bg-gray-700', 'hover:text-white');
+                    if (btn.dataset.view === name || (name === 'game' && btn.dataset.view === 'games')) {
+                        btn.classList.add('bg-purple-600', 'text-white');
+                        btn.classList.remove('text-gray-300', 'hover:bg-gray-700', 'hover:text-white');
+                    }
                 });
-                if (name === 'home-page') {
-                    currentShowcaseIndex = 0;
-                    startShowcase();
+                if (name === 'home-page' || name === 'game') {
                     startShootingStars();
                 } else {
-                    clearInterval(showcaseInterval);
-                    clearTimeout(typingTimeout);
-                    if (name === 'home-page') type();
                     stopShootingStars();
                 }
+                if (name === 'home-page') {
+                    startShowcase();
+                } else {
+                    clearInterval(showcaseInterval);
+                }
                 if (name === 'games') {
-                    searchInput.focus();
+                    searchInput.value = '';
+                    filterGames('');
                 }
             };
-            navButtons.forEach(btn => btn.addEventListener('click', () => showView(btn.dataset.view)));
-            document.querySelectorAll('.game-box').forEach(box => {
-                if (box.dataset.url) {
-                    box.addEventListener('click', () => {
-                        if (box.dataset.url.includes('krunker.io')) {
-                            window.open(box.dataset.url, '_blank');
-                        } else {
-                            gameIframe.src = box.dataset.url;
-                            showView('game');
-                        }
-                    });
-                }
-            });
-            document.getElementById('fullscreen-btn-game').addEventListener('click', () => gameIframe.requestFullscreen());
-            searchInput.addEventListener('input', () => {
-                const query = searchInput.value.toLowerCase().trim();
-                document.querySelectorAll('.five-box-row').forEach(row => {
-                    const games = row.querySelectorAll('.game-box');
-                    let visible = 0;
-                    games.forEach(game => {
-                        const title = game.dataset.title.toLowerCase();
-                        const matches = title.includes(query);
-                        game.style.display = matches ? '' : 'none';
-                        if (matches) visible++;
-                    });
-                    row.style.display = visible > 0 ? '' : 'none';
-                });
-                views.games.scrollTop = 0;
-            });
             const canvas = document.getElementById('particle-canvas');
             const ctx = canvas.getContext('2d');
-            let particles = [], animationId = null, particleInterval = null;
-            const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
-            resize(); window.addEventListener('resize', resize);
+            let particles = [];
+            let animationFrameId;
+            const resizeCanvas = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            };
             class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = canvas.height + 20;
-                    this.size = Math.random() * 4 + 2;
-                    this.speedY = -(Math.random() * 2 + 1);
-                    this.opacity = 1;
-                    const root = getComputedStyle(document.documentElement);
-                    const accent = root.getPropertyValue('--color-accent-purple').trim();
-                    const rgb = accent.match(/\w\w/g)?.map(x => parseInt(x, 16)) || [139, 92, 246];
-                    const hue = this.rgbToHsl(rgb[0], rgb[1], rgb[2])[0];
-                    this.color = `hsl(${hue + Math.random() * 60 - 30}, 100%, 70%)`;
+                constructor(x, y) {
+                    this.x = x || Math.random() * canvas.width;
+                    this.y = y || Math.random() * canvas.height;
+                    this.radius = Math.random() * 1.5 + 0.5;
+                    this.color = 'rgba(255, 255, 255, 0.8)';
+                    this.velocity = {
+                        x: (Math.random() - 0.5) * 0.5,
+                        y: (Math.random() - 0.5) * 0.5
+                    };
                 }
-                rgbToHsl(r, g, b) {
-                    r /= 255; g /= 255; b /= 255;
-                    const max = Math.max(r, g, b), min = Math.min(r, g, b);
-                    let h, s, l = (max + min) / 2;
-                    if (max === min) h = s = 0;
-                    else {
-                        const d = max - min;
-                        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-                        switch (max) {
-                            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                            case g: h = (b - r) / d + 2; break;
-                            case b: h = (r - g) / d + 4; break;
-                        }
-                        h /= 6;
-                    }
-                    return [h * 360, s, l];
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.closePath();
                 }
-                update() { this.y += this.speedY; this.opacity -= 0.01; if (this.opacity < 0) this.opacity = 0; }
-                draw() { ctx.globalAlpha = this.opacity; ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1; }
+                update() {
+                    this.x += this.velocity.x;
+                    this.y += this.velocity.y;
+                    if (this.x < 0 || this.x > canvas.width) this.velocity.x = -this.velocity.x;
+                    if (this.y < 0 || this.y > canvas.height) this.velocity.y = -this.velocity.y;
+                }
             }
-            const spawn = () => particles.push(new Particle());
-            const animate = () => {
+            const initParticles = () => {
+                particles = [];
+                for (let i = 0; i < 200; i++) {
+                    particles.push(new Particle());
+                }
+            };
+            const animateParticles = () => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles = particles.filter(p => p.opacity > 0);
-                particles.forEach(p => { p.update(); p.draw(); });
-                animationId = requestAnimationFrame(animate);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(139, 92, 246, ${1 - distance / 100})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                            ctx.closePath();
+                        }
+                    }
+                }
+                animationFrameId = requestAnimationFrame(animateParticles);
             };
-            const startParticles = () => {
-                if (!particleInterval) { particleInterval = setInterval(spawn, 150); animate(); }
+            const toggleParticles = (enabled) => {
+                if (enabled) {
+                    canvas.style.display = 'block';
+                    initParticles();
+                    animateParticles();
+                } else {
+                    canvas.style.display = 'none';
+                    cancelAnimationFrame(animationFrameId);
+                }
+                localStorage.setItem('particlesEnabled', enabled ? 'true' : 'false');
             };
-            const stopParticles = () => {
-                clearInterval(particleInterval); cancelAnimationFrame(animationId);
-                particleInterval = null; animationId = null; ctx.clearRect(0, 0, canvas.width, canvas.height); particles = [];
-            };
-            particlesToggle.checked = localStorage.getItem('particlesEnabled') !== 'false';
-            particlesToggle.addEventListener('change', () => {
-                localStorage.setItem('particlesEnabled', particlesToggle.checked);
-                particlesToggle.checked ? startParticles() : stopParticles();
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            const savedParticles = localStorage.getItem('particlesEnabled');
+            const particlesEnabled = savedParticles ? savedParticles === 'true' : true;
+            particlesToggle.checked = particlesEnabled;
+            toggleParticles(particlesEnabled);
+            particlesToggle.addEventListener('change', (e) => {
+                toggleParticles(e.target.checked);
             });
-            if (particlesToggle.checked) startParticles();
-            const observer = new MutationObserver(() => {
-                if (particlesToggle.checked) {
-                    stopParticles();
-                    startParticles();
+            navButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const targetView = e.target.dataset.view;
+                    showView(targetView);
+                });
+            });
+            gameBoxes.forEach(box => {
+                box.addEventListener('click', () => {
+                    const url = box.dataset.url;
+                    gameIframe.src = url;
+                    showView('game');
+                });
+            });
+            document.getElementById('fullscreen-btn-game').addEventListener('click', () => {
+                if (gameIframe.requestFullscreen) {
+                    gameIframe.requestFullscreen();
+                } else if (gameIframe.mozRequestFullScreen) {
+                    gameIframe.mozRequestFullScreen();
+                } else if (gameIframe.webkitRequestFullscreen) {
+                    gameIframe.webkitRequestFullscreen();
+                } else if (gameIframe.msRequestFullscreen) {
+                    gameIframe.msRequestFullscreen();
                 }
             });
-            observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
             const themeOptions = document.querySelectorAll('.theme-option');
-            const validThemes = ['dark', 'cotton-candy', 'hacker', 'neon', 'galaxy', 'sunset', 'forest'];
-            const setTheme = (theme) => {
-                if (!validThemes.includes(theme)) theme = 'dark';
-                document.body.setAttribute('data-theme', theme);
-                localStorage.setItem('theme', theme);
-                themeOptions.forEach(o => o.classList.toggle('active', o.dataset.theme === theme));
+            const body = document.body;
+            const applyTheme = (theme) => {
+                body.setAttribute('data-theme', theme);
+                localStorage.setItem('selectedTheme', theme);
+                themeOptions.forEach(opt => {
+                    opt.classList.toggle('active', opt.dataset.theme === theme);
+                });
+                if (views['home-page'] && !views['home-page'].classList.contains('hidden-view') && (theme === 'galaxy' || theme === 'dark')) {
+                    stopShootingStars();
+                    startShootingStars();
+                }
             };
-            themeOptions.forEach(o => o.addEventListener('click', () => setTheme(o.dataset.theme)));
-            setTheme(localStorage.getItem('theme') || 'dark');
+            themeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    applyTheme(option.dataset.theme);
+                });
+            });
+            const savedTheme = localStorage.getItem('selectedTheme') || 'dark';
+            applyTheme(savedTheme);
+            const filterGames = (searchTerm) => {
+                const lowerCaseSearch = searchTerm.toLowerCase();
+                gameBoxWrapper.innerHTML = '';
+                let currentRow = null;
+                let boxCount = 0;
+                gameBoxes.forEach(box => {
+                    const title = box.dataset.title.toLowerCase();
+                    if (!lowerCaseSearch || title.includes(lowerCaseSearch)) {
+                        if (boxCount % 5 === 0) {
+                            currentRow = document.createElement('div');
+                            currentRow.className = 'five-box-row';
+                            gameBoxWrapper.appendChild(currentRow);
+                        }
+                        const clonedBox = box.cloneNode(true);
+                        clonedBox.addEventListener('click', () => {
+                            const url = clonedBox.dataset.url;
+                            gameIframe.src = url;
+                            showView('game');
+                        });
+                        currentRow.appendChild(clonedBox);
+                        boxCount++;
+                    }
+                });
+            };
+            searchInput.addEventListener('input', (e) => {
+                filterGames(e.target.value);
+            });
             const panicToggle = document.getElementById('panic-toggle');
             const panicOptions = document.getElementById('panic-options');
             const panicKeyInput = document.getElementById('panic-key-input');
             const panicUrlInput = document.getElementById('panic-url');
             const savePanicBtn = document.getElementById('save-panic-btn');
             const panicStatus = document.getElementById('panic-status');
-            panicToggle.checked = localStorage.getItem('panicEnabled') === 'true';
-            panicKeyInput.value = localStorage.getItem('panicKey') || '`';
-            panicUrlInput.value = localStorage.getItem('panicUrl') || 'https://docs.google.com';
-            panicToggle.addEventListener('change', () => {
-                localStorage.setItem('panicEnabled', panicToggle.checked);
-                panicOptions.classList.toggle('hidden', !panicToggle.checked);
-            });
-            panicOptions.classList.toggle('hidden', !panicToggle.checked);
-            panicKeyInput.addEventListener('keydown', e => {
-                e.preventDefault();
-                let key = e.key;
-                if (e.ctrlKey) key = 'Ctrl+' + key;
-                if (e.altKey) key = 'Alt+' + key;
-                if (e.shiftKey) key = 'Shift+' + key;
-                if (e.metaKey) key = 'Meta+' + key;
-                panicKeyInput.value = key;
-            });
-            savePanicBtn.addEventListener('click', () => {
-                localStorage.setItem('panicKey', panicKeyInput.value.trim());
-                localStorage.setItem('panicUrl', panicUrlInput.value.trim());
-                panicStatus.classList.remove('hidden');
-                setTimeout(() => panicStatus.classList.add('hidden'), 2000);
-            });
-            document.addEventListener('keydown', e => {
-                if (!panicToggle.checked) return;
-                const saved = localStorage.getItem('panicKey') || '`';
-                const parts = saved.split('+');
-                let match = true;
-                parts.forEach(p => {
-                    if (p === 'Ctrl' && !e.ctrlKey) match = false;
-                    else if (p === 'Alt' && !e.altKey) match = false;
-                    else if (p === 'Shift' && !e.shiftKey) match = false;
-                    else if (p === 'Meta' && !e.metaKey) match = false;
-                    else if (p.toLowerCase() !== e.key.toLowerCase()) match = false;
-                });
-                if (match) {
-                    e.preventDefault();
-                    window.location.href = localStorage.getItem('panicUrl') || 'https://docs.google.com';
-                }
-            });
             const siteTitleInput = document.getElementById('site-title-input');
             const siteLogoInput = document.getElementById('site-logo-input');
-            const currentLogo = document.getElementById('current-logo');
-            if (localStorage.getItem('siteTitle')) siteTitleInput.value = localStorage.getItem('siteTitle');
-            if (localStorage.getItem('siteLogo')) currentLogo.textContent = 'custom';
-            siteTitleInput.addEventListener('input', () => {
-                const val = siteTitleInput.value.trim();
-                document.title = val || 'Silly funness';
-                val ? localStorage.setItem('siteTitle', val) : localStorage.removeItem('siteTitle');
+            const currentLogoSpan = document.getElementById('current-logo');
+            const openAboutBlankBtn = document.getElementById('open-about-blank-btn');
+            const homeAboutBlankBtn = document.getElementById('home-about-blank-btn');
+            const resetSettingsBtn = document.getElementById('reset-settings');
+            let panicKey = null;
+            let panicURL = 'https://docs.google.com';
+            const panicHandler = (event) => {
+                if (panicToggle.checked && panicKey && event.key.toUpperCase() === panicKey) {
+                    window.location.replace(panicURL);
+                }
+            };
+            document.addEventListener('keydown', panicHandler);
+            const loadSettings = () => {
+                const savedPanicEnabled = localStorage.getItem('panicEnabled') === 'true';
+                panicToggle.checked = savedPanicEnabled;
+                panicOptions.classList.toggle('hidden', !savedPanicEnabled);
+                const savedPanicKey = localStorage.getItem('panicKey');
+                if (savedPanicKey) {
+                    panicKey = savedPanicKey;
+                    panicKeyInput.value = `Key: ${savedPanicKey}`;
+                } else {
+                    panicKeyInput.value = '';
+                }
+                const savedPanicUrl = localStorage.getItem('panicURL');
+                if (savedPanicUrl) {
+                    panicURL = savedPanicUrl;
+                    panicUrlInput.value = savedPanicUrl;
+                } else {
+                    panicUrlInput.value = panicURL;
+                }
+                const savedTitle = localStorage.getItem('siteTitle');
+                if (savedTitle) {
+                    document.title = savedTitle;
+                    siteTitleInput.value = savedTitle;
+                }
+                const savedFavicon = localStorage.getItem('siteFavicon');
+                if (savedFavicon) {
+                    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+                    link.type = 'image/x-icon';
+                    link.rel = 'shortcut icon';
+                    link.href = savedFavicon;
+                    document.getElementsByTagName('head')[0].appendChild(link);
+                    currentLogoSpan.textContent = 'Custom';
+                } else {
+                    currentLogoSpan.textContent = 'none';
+                }
+            };
+            const saveSettings = () => {
+                localStorage.setItem('panicEnabled', panicToggle.checked);
+                if (panicKey) {
+                    localStorage.setItem('panicKey', panicKey);
+                    localStorage.setItem('panicURL', panicUrlInput.value || 'https://docs.google.com');
+                    panicURL = panicUrlInput.value || 'https://docs.google.com';
+                    panicStatus.textContent = 'Saved!';
+                    panicStatus.classList.remove('hidden');
+                    setTimeout(() => panicStatus.classList.add('hidden'), 2000);
+                }
+                const newTitle = siteTitleInput.value.trim();
+                if (newTitle) {
+                    document.title = newTitle;
+                    localStorage.setItem('siteTitle', newTitle);
+                } else {
+                    document.title = "Silly funness";
+                    localStorage.removeItem('siteTitle');
+                }
+            };
+            const openAboutBlank = () => {
+                const newWindow = window.open('about:blank', '_blank');
+                if (newWindow) {
+                    newWindow.document.write(`<html><head><title>${document.title}</title><link rel="shortcut icon" href="${document.querySelector("link[rel*='icon']") ? document.querySelector("link[rel*='icon']").href : 'none'}" type="image/x-icon"></head><body><iframe style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" src="${window.location.href}"></iframe></body></html>`);
+                    window.close();
+                }
+            };
+            const handlePanicKeydown = (event) => {
+                event.preventDefault();
+                const key = event.key.toUpperCase();
+                if (key.length === 1 && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
+                    panicKey = key;
+                    panicKeyInput.value = `Key: ${key}`;
+                    panicKeyInput.blur();
+                } else if (key === 'BACKSPACE' || key === 'DELETE') {
+                    panicKey = null;
+                    panicKeyInput.value = '';
+                }
+            };
+            panicToggle.addEventListener('change', (e) => {
+                panicOptions.classList.toggle('hidden', !e.target.checked);
+                localStorage.setItem('panicEnabled', e.target.checked);
             });
-            siteLogoInput.addEventListener('change', () => {
-                const file = siteLogoInput.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = e => {
-                    localStorage.setItem('siteLogo', e.target.result);
-                    currentLogo.textContent = 'custom';
-                    const link = document.querySelector("link[rel='icon']") || document.createElement('link');
-                    link.rel = 'icon';
-                    link.href = e.target.result;
-                    document.head.appendChild(link);
-                };
-                reader.readAsDataURL(file);
+            panicKeyInput.addEventListener('focus', () => {
+                panicKeyInput.value = 'Press a key (A-Z)...';
+                panicKeyInput.addEventListener('keydown', handlePanicKeydown, { once: true });
             });
-            document.getElementById('open-about-blank-btn').addEventListener('click', () => {
-                const title = localStorage.getItem('siteTitle') || 'Google Docs';
-                const favicon = localStorage.getItem('siteLogo') || 'https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico';
-                const url = window.location.href;
-                const html = `<!DOCTYPE html><html><head><title>${title}</title><link rel="icon" href="${favicon}"><style>body,html{margin:0;padding:0;height:100%;overflow:hidden;background:#1a1a2e;}iframe{width:100%;height:100%;border:none;}</style></head><body><iframe src="${url}" allow="fullscreen"></iframe></body></html>`;
-                const win = window.open('about:blank', '_blank');
-                if (win) { win.document.write(html); win.document.close(); }
+            panicKeyInput.addEventListener('blur', () => {
+                panicKeyInput.removeEventListener('keydown', handlePanicKeydown);
+                if (panicKey) {
+                    panicKeyInput.value = `Key: ${panicKey}`;
+                } else {
+                    panicKeyInput.value = '';
+                }
             });
-            document.getElementById('reset-settings').addEventListener('click', () => {
-                if (confirm('Reset all settings?')) { localStorage.clear(); location.reload(); }
+            savePanicBtn.addEventListener('click', saveSettings);
+            siteTitleInput.addEventListener('input', saveSettings);
+            siteLogoInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const faviconBase64 = event.target.result;
+                        localStorage.setItem('siteFavicon', faviconBase64);
+                        loadSettings();
+                    };
+                    reader.readAsDataURL(file);
+                }
             });
+            openAboutBlankBtn.addEventListener('click', openAboutBlank);
+            homeAboutBlankBtn.addEventListener('click', openAboutBlank);
+            resetSettingsBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to reset all settings?')) {
+                    localStorage.removeItem('panicEnabled');
+                    localStorage.removeItem('panicKey');
+                    localStorage.removeItem('panicURL');
+                    localStorage.removeItem('siteTitle');
+                    localStorage.removeItem('siteFavicon');
+                    localStorage.removeItem('selectedTheme');
+                    window.location.reload();
+                }
+            });
+            loadSettings();
             showView('home-page');
-            startShootingStars();
         });
     </script>
 </body>
 </html>
-
