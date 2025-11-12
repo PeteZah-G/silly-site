@@ -257,9 +257,33 @@
             max-height: calc(100vh - 4rem); scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
             overflow-y: auto; overflow-x: hidden;
         }
+        #settings-sidebar {
+            background: rgba(55, 65, 81, 0.8);
+            padding: 1rem;
+            border-right: 1px solid var(--color-border);
+        }
+        .tab-button {
+            display: block;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            margin-bottom: 0.5rem;
+        }
+        .tab-button:hover { background: var(--color-accent-purple); color: white; }
+        .tab-button.active { background: var(--color-accent-purple); color: white; font-weight: bold; }
+        #settings-content {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
     </style>
 </head>
 <body data-theme="dark">
+    <div id="fps" style="position: fixed; top: 10px; right: 10px; color: var(--color-text); background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; z-index: 9999;">FPS: 0</div>
     <canvas id="particle-canvas"></canvas>
     <div class="content">
         <nav class="bg-gray-800 bg-opacity-90 backdrop-blur-md shadow-xl border-b-2 border-purple-500/50 flex-shrink-0">
@@ -367,62 +391,110 @@
             <button id="fullscreen-btn-game" title="Fullscreen"><i class="fas fa-expand"></i></button>
             <iframe id="game-iframe" src="" allow="fullscreen"></iframe>
         </div>
-        <div id="settings-view" class="view hidden-view p-8 h-full overflow-y-auto">
-            <h1 class="text-3xl font-bold text-center mb-6" style="color: var(--color-accent-purple)">Settings</h1>
-            <div class="max-w-lg mx-auto bg-gray-700 bg-opacity-80 p-6 rounded-xl shadow-lg border border-purple-500/50 space-y-6 backdrop-blur-md">
-                <div class="setting-item">
-                    <label class="flex items-center justify-between">
-                        <span class="font-semibold">Enable Particles</span>
-                        <label class="toggle">
-                            <input type="checkbox" id="particles-toggle" checked>
-                            <span class="slider"></span>
+        <div id="settings-view" class="view hidden-view p-8 h-full overflow-y-auto flex">
+            <div id="settings-sidebar" class="w-32">
+                <button class="tab-button active" data-tab="appearance">Appearance</button>
+                <button class="tab-button" data-tab="audio">Audio</button>
+                <button class="tab-button" data-tab="panic">Panic</button>
+                <button class="tab-button" data-tab="cloak">Cloak</button>
+                <button class="tab-button" data-tab="general">General</button>
+            </div>
+            <div id="settings-content" class="max-w-lg mx-auto">
+                <div class="tab-panel active" id="appearance-tab">
+                    <div class="setting-item">
+                        <label class="flex items-center justify-between">
+                            <span class="font-semibold">Enable Particles</span>
+                            <label class="toggle">
+                                <input type="checkbox" id="particles-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
                         </label>
-                    </label>
-                </div>
-                <div class="setting-item">
-                    <label class="block mb-3 font-semibold">Choose Theme</label>
-                    <div class="theme-grid">
-                        <div class="theme-option" data-theme="dark">Dark</div>
-                        <div class="theme-option" data-theme="cotton-candy">Cotton Candy</div>
-                        <div class="theme-option" data-theme="hacker">Hacker</div>
-                        <div class="theme-option" data-theme="neon">Neon</div>
-                        <div class="theme-option" data-theme="galaxy">Galaxy</div>
-                        <div class="theme-option" data-theme="sunset">Sunset</div>
-                        <div class="theme-option" data-theme="forest">Forest</div>
+                    </div>
+                    <div class="setting-item">
+                        <label class="block mb-2 font-semibold">Particle Density</label>
+                        <input type="range" id="particle-density" min="10" max="200" value="50" class="w-full">
+                        <span id="particle-density-value" class="text-sm">50</span>
+                    </div>
+                    <div class="setting-item">
+                        <label class="flex items-center justify-between">
+                            <span class="font-semibold">Performance Mode</span>
+                            <label class="toggle">
+                                <input type="checkbox" id="performance-toggle">
+                                <span class="slider"></span>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="block mb-2 font-semibold">Auto-Showcase Speed (seconds)</label>
+                        <select id="showcase-speed" class="w-full p-2 rounded bg-gray-900 text-gray-100 border border-gray-600">
+                            <option value="1000">1s</option>
+                            <option value="2000" selected>2s</option>
+                            <option value="3000">3s</option>
+                            <option value="5000">5s</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label class="block mb-3 font-semibold">Choose Theme</label>
+                        <div class="theme-grid">
+                            <div class="theme-option" data-theme="dark">Dark</div>
+                            <div class="theme-option" data-theme="cotton-candy">Cotton Candy</div>
+                            <div class="theme-option" data-theme="hacker">Hacker</div>
+                            <div class="theme-option" data-theme="neon">Neon</div>
+                            <div class="theme-option" data-theme="galaxy">Galaxy</div>
+                            <div class="theme-option" data-theme="sunset">Sunset</div>
+                            <div class="theme-option" data-theme="forest">Forest</div>
+                        </div>
                     </div>
                 </div>
-                <div class="setting-item">
-                    <label class="flex items-center justify-between mb-3">
-                        <span class="font-semibold">Enable Panic Key</span>
-                        <label class="toggle">
-                            <input type="checkbox" id="panic-toggle">
-                            <span class="slider"></span>
+                <div class="tab-panel" id="audio-tab">
+                    <div class="setting-item">
+                        <label class="flex items-center justify-between">
+                            <span class="font-semibold">Mute Game Audio</span>
+                            <label class="toggle">
+                                <input type="checkbox" id="game-volume-toggle">
+                                <span class="slider"></span>
+                            </label>
                         </label>
-                    </label>
-                    <div id="panic-options" class="space-y-3 hidden">
-                        <div>
-                            <label class="block text-sm mb-1">Panic Key</label>
-                            <input type="text" id="panic-key-input" class="panic-input" placeholder="Press a key (A-Z)..." />
-                        </div>
-                        <div>
-                            <label class="block text-sm mb-1">Redirect URL</label>
-                            <input type="text" id="panic-url" class="panic-input" placeholder="https://docs.google.com">
-                        </div>
-                        <button id="save-panic-btn" class="save-btn w-full">Save</button>
-                        <p id="panic-status" class="text-sm text-green-400 mt-2 hidden">Saved!</p>
                     </div>
                 </div>
-                <div class="setting-item">
-                    <label class="block mb-1">Cloak Title</label>
-                    <input type="text" id="site-title-input" class="w-full p-2 rounded bg-gray-900 text-gray-100 border border-gray-600" placeholder="Google Docs">
+                <div class="tab-panel" id="panic-tab">
+                    <div class="setting-item">
+                        <label class="flex items-center justify-between mb-3">
+                            <span class="font-semibold">Enable Panic Key</span>
+                            <label class="toggle">
+                                <input type="checkbox" id="panic-toggle">
+                                <span class="slider"></span>
+                            </label>
+                        </label>
+                        <div id="panic-options" class="space-y-3 hidden">
+                            <div>
+                                <label class="block text-sm mb-1">Panic Key</label>
+                                <input type="text" id="panic-key-input" class="panic-input" placeholder="Press a key (A-Z)..." />
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">Redirect URL</label>
+                                <input type="text" id="panic-url" class="panic-input" placeholder="https://docs.google.com">
+                            </div>
+                            <button id="save-panic-btn" class="save-btn w-full">Save</button>
+                            <p id="panic-status" class="text-sm text-green-400 mt-2 hidden">Saved!</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="setting-item">
-                    <label class="block mb-1">Cloak Favicon</label>
-                    <input type="file" id="site-logo-input" accept="image/*" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white">
-                    <p class="text-xs mt-1">Current: <span id="current-logo">none</span></p>
+                <div class="tab-panel" id="cloak-tab">
+                    <div class="setting-item">
+                        <label class="block mb-1">Cloak Title</label>
+                        <input type="text" id="site-title-input" class="w-full p-2 rounded bg-gray-900 text-gray-100 border border-gray-600" placeholder="Google Docs">
+                    </div>
+                    <div class="setting-item">
+                        <label class="block mb-1">Cloak Favicon</label>
+                        <input type="file" id="site-logo-input" accept="image/*" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white">
+                        <p class="text-xs mt-1">Current: <span id="current-logo">none</span></p>
+                    </div>
                 </div>
-                <button id="open-about-blank-btn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 rounded-lg transition transform hover:scale-105">Open in about:blank</button>
-                <button id="reset-settings" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg transition">Reset All</button>
+                <div class="tab-panel" id="general-tab">
+                    <button id="open-about-blank-btn" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 rounded-lg transition transform hover:scale-105">Open in about:blank</button>
+                    <button id="reset-settings" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg transition mt-4">Reset All</button>
+                </div>
             </div>
         </div>
     </div>
@@ -437,12 +509,19 @@
             const navButtons = document.querySelectorAll('.nav-button');
             const gameIframe = document.getElementById('game-iframe');
             const particlesToggle = document.getElementById('particles-toggle');
+            const particleDensity = document.getElementById('particle-density');
+            const particleDensityValue = document.getElementById('particle-density-value');
+            const gameVolumeToggle = document.getElementById('game-volume-toggle');
+            const performanceToggle = document.getElementById('performance-toggle');
+            const showcaseSpeed = document.getElementById('showcase-speed');
             const showcase = document.getElementById('game-showcase');
             const showcaseImg = document.getElementById('showcase-img');
             const showcaseTitle = document.getElementById('showcase-title');
             const searchInput = document.getElementById('game-search');
             const gradientWord = document.getElementById('gradient-word');
             const gameBoxWrapper = document.getElementById('game-box-wrapper');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanels = document.querySelectorAll('.tab-panel');
             const words = ['silly.', 'freedom.', 'beauty.', 'peace.', 'amazement.', 'fun.'];
             let wordIndex = 0;
             let charIndex = 0;
@@ -488,7 +567,7 @@
             };
             const startShowcase = () => {
                 updateShowcase();
-                showcaseInterval = setInterval(updateShowcase, 3000);
+                showcaseInterval = setInterval(updateShowcase, parseInt(showcaseSpeed.value));
             };
             let shootingStarInterval = null;
             const createShootingStar = () => {
@@ -566,8 +645,8 @@
                     this.radius = Math.random() * 1.5 + 0.5;
                     this.color = 'rgba(255, 255, 255, 0.8)';
                     this.velocity = {
-                        x: (Math.random() - 0.5) * 0.5,
-                        y: (Math.random() - 0.5) * 0.5
+                        x: (Math.random() - 0.5) * 0.2,
+                        y: (Math.random() - 0.5) * 0.2
                     };
                 }
                 draw() {
@@ -584,9 +663,9 @@
                     if (this.y < 0 || this.y > canvas.height) this.velocity.y = -this.velocity.y;
                 }
             }
-            const initParticles = () => {
+            const initParticles = (count) => {
                 particles = [];
-                for (let i = 0; i < 200; i++) {
+                for (let i = 0; i < count; i++) {
                     particles.push(new Particle());
                 }
             };
@@ -612,25 +691,79 @@
                 }
                 animationFrameId = requestAnimationFrame(animateParticles);
             };
-            const toggleParticles = (enabled) => {
+            const toggleParticles = (enabled, count) => {
                 if (enabled) {
                     canvas.style.display = 'block';
-                    initParticles();
+                    initParticles(count);
                     animateParticles();
                 } else {
                     canvas.style.display = 'none';
                     cancelAnimationFrame(animationFrameId);
                 }
                 localStorage.setItem('particlesEnabled', enabled ? 'true' : 'false');
+                localStorage.setItem('particleCount', count);
             };
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
             const savedParticles = localStorage.getItem('particlesEnabled');
+            const savedParticleCount = parseInt(localStorage.getItem('particleCount')) || 50;
             const particlesEnabled = savedParticles ? savedParticles === 'true' : true;
             particlesToggle.checked = particlesEnabled;
-            toggleParticles(particlesEnabled);
+            particleDensity.value = savedParticleCount;
+            particleDensityValue.textContent = savedParticleCount;
+            toggleParticles(particlesEnabled, savedParticleCount);
+            particleDensity.addEventListener('input', (e) => {
+                particleDensityValue.textContent = e.target.value;
+                if (particlesToggle.checked) {
+                    toggleParticles(true, parseInt(e.target.value));
+                }
+            });
             particlesToggle.addEventListener('change', (e) => {
-                toggleParticles(e.target.checked);
+                toggleParticles(e.target.checked, parseInt(particleDensity.value));
+            });
+            const savedVolume = localStorage.getItem('gameVolumeMuted') === 'true';
+            gameVolumeToggle.checked = savedVolume;
+            gameIframe.volume = savedVolume ? 0 : 1;
+            gameVolumeToggle.addEventListener('change', (e) => {
+                gameIframe.volume = e.target.checked ? 0 : 1;
+                localStorage.setItem('gameVolumeMuted', e.target.checked ? 'true' : 'false');
+            });
+            const savedPerformance = localStorage.getItem('performanceMode') === 'true';
+            performanceToggle.checked = savedPerformance;
+            if (savedPerformance) {
+                toggleParticles(false, 10);
+                stopShootingStars();
+                showcaseSpeed.value = '5000';
+                clearInterval(showcaseInterval);
+                if (views['home-page'] && !views['home-page'].classList.contains('hidden-view')) {
+                    startShowcase();
+                }
+            }
+            performanceToggle.addEventListener('change', (e) => {
+                localStorage.setItem('performanceMode', e.target.checked ? 'true' : 'false');
+                if (e.target.checked) {
+                    toggleParticles(false, 10);
+                    stopShootingStars();
+                    showcaseSpeed.value = '5000';
+                    clearInterval(showcaseInterval);
+                    if (views['home-page'] && !views['home-page'].classList.contains('hidden-view')) {
+                        startShowcase();
+                    }
+                } else {
+                    toggleParticles(particlesToggle.checked, parseInt(particleDensity.value));
+                    if (views['home-page'] && !views['home-page'].classList.contains('hidden-view')) {
+                        startShootingStars();
+                    }
+                }
+            });
+            const savedShowcaseSpeed = localStorage.getItem('showcaseSpeed') || '2000';
+            showcaseSpeed.value = savedShowcaseSpeed;
+            showcaseSpeed.addEventListener('change', (e) => {
+                clearInterval(showcaseInterval);
+                if (views['home-page'] && !views['home-page'].classList.contains('hidden-view')) {
+                    startShowcase();
+                }
+                localStorage.setItem('showcaseSpeed', e.target.value);
             });
             navButtons.forEach(button => {
                 button.addEventListener('click', (e) => {
@@ -836,12 +969,36 @@
                     localStorage.removeItem('siteTitle');
                     localStorage.removeItem('siteFavicon');
                     localStorage.removeItem('selectedTheme');
+                    localStorage.removeItem('particlesEnabled');
+                    localStorage.removeItem('particleCount');
+                    localStorage.removeItem('gameVolumeMuted');
+                    localStorage.removeItem('showcaseSpeed');
+                    localStorage.removeItem('performanceMode');
                     window.location.reload();
                 }
+            });
+            tabButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    tabPanels.forEach(p => p.classList.remove('active'));
+                    document.getElementById(e.target.dataset.tab + '-tab').classList.add('active');
+                });
             });
             loadSettings();
             showView('home-page');
         });
+        let lastCalledTime = Date.now();
+        let fps = 0;
+        let fpsDisplay = document.getElementById('fps');
+        function updateFPS() {
+            const delta = (Date.now() - lastCalledTime) / 1000;
+            lastCalledTime = Date.now();
+            fps = Math.round(1 / delta);
+            fpsDisplay.textContent = `FPS: ${fps}`;
+            requestAnimationFrame(updateFPS);
+        }
+        requestAnimationFrame(updateFPS);
     </script>
 </body>
 </html>
