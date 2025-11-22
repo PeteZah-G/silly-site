@@ -7,6 +7,12 @@ window.addEventListener('load', () => {
     };
     const navButtons = document.querySelectorAll('.nav-button');
     const gameIframe = document.getElementById('game-iframe');
+    // ... (around line 9)
+        const navButtons = document.querySelectorAll('.nav-button');
+        const gameIframe = document.getElementById('game-iframe');
+        const gameLoader = document.getElementById('game-loader'); // <-- ADD THIS LINE
+        const particlesToggle = document.getElementById('particles-toggle');
+        // ...
     const particlesToggle = document.getElementById('particles-toggle');
     const particleDensity = document.getElementById('particle-density');
     const particleDensityValue = document.getElementById('particle-density-value');
@@ -272,25 +278,41 @@ window.addEventListener('load', () => {
         });
     });
 
-    // --- THIS IS THE CLICK HANDLER LOGIC ---
-    const handleGameClick = (url) => {
-        if (!url) return;
+  // --- THIS IS THE CLICK HANDLER LOGIC ---
+        const handleGameClick = (url) => {
+            if (!url) return;
+            
+            // If it's a link to your own github.io page, load it in the iframe
+            if (url.startsWith('https://iisilly1059.github.io') || !url.startsWith('http')) {
+                gameLoader.classList.add('active'); // <-- THIS IS THE NEW LINE
+                gameIframe.src = url;
+                showView('game');
+            } else {
+                // For external links (like krunker.io), open in a new tab
+                window.open(url, '_blank');
+            }
+        };
         
-        // If it's a link to your own github.io page, load it in the iframe
-        if (url.startsWith('https://iisilly1059.github.io') || !url.startsWith('http')) {
-            gameIframe.src = url;
-            showView('game');
-        } else {
-            // For external links (like krunker.io), open in a new tab
-            window.open(url, '_blank');
-        }
-    };
     
     gameBoxes.forEach(box => {
         box.addEventListener('click', () => {
             handleGameClick(box.dataset.url);
         });
     });
+    // ... (around line 245)
+        });
+        // --- END OF CLICK HANDLER LOGIC ---
+
+        // --- ADD THIS NEW BLOCK ---
+        // Hide loader when iframe finishes loading
+        gameIframe.addEventListener('load', () => {
+            gameLoader.classList.remove('active');
+        });
+        // --- END OF NEW BLOCK ---
+
+        document.getElementById('fullscreen-btn-game').addEventListener('click', () => {
+            if (gameIframe.requestFullscreen) {
+        // ...
     // --- END OF CLICK HANDLER LOGIC ---
 
     document.getElementById('fullscreen-btn-game').addEventListener('click', () => {
