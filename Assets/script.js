@@ -5,15 +5,14 @@ window.addEventListener('load', () => {
         'game': document.getElementById('game-view'),
         'settings': document.getElementById('settings-view')
     };
+    
+    // --- THIS BLOCK IS NOW FIXED ---
     const navButtons = document.querySelectorAll('.nav-button');
     const gameIframe = document.getElementById('game-iframe');
-// ... (line 8)
-const navButtons = document.querySelectorAll('.nav-button');
-const gameIframe = document.getElementById('game-iframe');
-const gameLoader = document.getElementById('game-loader'); //
-const particlesToggle = document.getElementById('particles-toggle');
-// ...
+    const gameLoader = document.getElementById('game-loader'); // This was the line we were trying to add
     const particlesToggle = document.getElementById('particles-toggle');
+    // --- END OF FIX ---
+    
     const particleDensity = document.getElementById('particle-density');
     const particleDensityValue = document.getElementById('particle-density-value');
     const gameVolumeToggle = document.getElementById('game-volume-toggle');
@@ -27,11 +26,14 @@ const particlesToggle = document.getElementById('particles-toggle');
     const gameBoxWrapper = document.getElementById('game-box-wrapper');
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabPanels = document.querySelectorAll('.tab-panel');
+    const fpsDisplay = document.getElementById('fps'); // Moved this here
+    
     const words = ['silly.', 'freedom.', 'beauty.', 'peace.', 'amazement.', 'fun.'];
     let wordIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
     let typingTimeout;
+    
     const type = () => {
         const currentWord = words[wordIndex];
         if (isDeleting) {
@@ -54,9 +56,11 @@ const particlesToggle = document.getElementById('particles-toggle');
         typingTimeout = setTimeout(type, typeSpeed);
     };
     type();
+    
     const gameBoxes = document.querySelectorAll('.game-box[data-url]');
     let currentShowcaseIndex = 0;
     let showcaseInterval = null;
+    
     const updateShowcase = () => {
         const box = gameBoxes[currentShowcaseIndex];
         const url = box.dataset.url;
@@ -65,17 +69,18 @@ const particlesToggle = document.getElementById('particles-toggle');
         showcaseImg.src = img;
         showcaseTitle.textContent = title;
         showcase.onclick = () => {
-            // This logic is now handled by the game box click handler
-            // We just need to find the original box and click it
             box.click();
         };
         currentShowcaseIndex = (currentShowcaseIndex + 1) % gameBoxes.length;
     };
+    
     const startShowcase = () => {
         updateShowcase();
         showcaseInterval = setInterval(updateShowcase, parseInt(showcaseSpeed.value));
     };
+    
     let shootingStarInterval = null;
+    
     const createShootingStar = () => {
         if (views['home-page'].classList.contains('hidden-view')) return;
         const star = document.createElement('div');
@@ -99,15 +104,18 @@ const particlesToggle = document.getElementById('particles-toggle');
         };
         moveStar();
     };
+    
     const startShootingStars = () => {
         if (shootingStarInterval) clearInterval(shootingStarInterval);
         createShootingStar();
         shootingStarInterval = setInterval(createShootingStar, 5000);
     };
+    
     const stopShootingStars = () => {
         if (shootingStarInterval) clearInterval(shootingStarInterval);
         document.querySelectorAll('.shooting-star').forEach(s => s.remove());
     };
+    
     window.showView = function(name) {
         for (let view in views) {
             views[view].classList.add('hidden-view');
@@ -136,14 +144,17 @@ const particlesToggle = document.getElementById('particles-toggle');
             filterGames('');
         }
     };
+    
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
     let animationFrameId;
+    
     const resizeCanvas = () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     };
+    
     class Particle {
         constructor(x, y) {
             this.x = x || Math.random() * canvas.width;
@@ -169,12 +180,14 @@ const particlesToggle = document.getElementById('particles-toggle');
             if (this.y < 0 || this.y > canvas.height) this.velocity.y = -this.velocity.y;
         }
     }
+    
     const initParticles = (count) => {
         particles = [];
         for (let i = 0; i < count; i++) {
             particles.push(new Particle());
         }
     };
+    
     const animateParticles = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (let i = 0; i < particles.length; i++) {
@@ -197,6 +210,7 @@ const particlesToggle = document.getElementById('particles-toggle');
         }
         animationFrameId = requestAnimationFrame(animateParticles);
     };
+    
     const toggleParticles = (enabled, count) => {
         if (enabled) {
             canvas.style.display = 'block';
@@ -209,8 +223,10 @@ const particlesToggle = document.getElementById('particles-toggle');
         localStorage.setItem('particlesEnabled', enabled ? 'true' : 'false');
         localStorage.setItem('particleCount', count);
     };
+    
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
+    
     const savedParticles = localStorage.getItem('particlesEnabled');
     const savedParticleCount = parseInt(localStorage.getItem('particleCount')) || 50;
     const particlesEnabled = savedParticles ? savedParticles === 'true' : true;
@@ -218,22 +234,27 @@ const particlesToggle = document.getElementById('particles-toggle');
     particleDensity.value = savedParticleCount;
     particleDensityValue.textContent = savedParticleCount;
     toggleParticles(particlesEnabled, savedParticleCount);
+    
     particleDensity.addEventListener('input', (e) => {
         particleDensityValue.textContent = e.target.value;
         if (particlesToggle.checked) {
             toggleParticles(true, parseInt(e.target.value));
         }
     });
+    
     particlesToggle.addEventListener('change', (e) => {
         toggleParticles(e.target.checked, parseInt(particleDensity.value));
     });
+    
     const savedVolume = localStorage.getItem('gameVolumeMuted') === 'true';
     gameVolumeToggle.checked = savedVolume;
     gameIframe.volume = savedVolume ? 0 : 1;
+    
     gameVolumeToggle.addEventListener('change', (e) => {
         gameIframe.volume = e.target.checked ? 0 : 1;
         localStorage.setItem('gameVolumeMuted', e.target.checked ? 'true' : 'false');
     });
+    
     const savedPerformance = localStorage.getItem('performanceMode') === 'true';
     performanceToggle.checked = savedPerformance;
     if (savedPerformance) {
@@ -245,6 +266,7 @@ const particlesToggle = document.getElementById('particles-toggle');
             startShowcase();
         }
     }
+    
     performanceToggle.addEventListener('change', (e) => {
         localStorage.setItem('performanceMode', e.target.checked ? 'true' : 'false');
         if (e.target.checked) {
@@ -262,8 +284,10 @@ const particlesToggle = document.getElementById('particles-toggle');
             }
         }
     });
+    
     const savedShowcaseSpeed = localStorage.getItem('showcaseSpeed') || '2000';
     showcaseSpeed.value = savedShowcaseSpeed;
+    
     showcaseSpeed.addEventListener('change', (e) => {
         clearInterval(showcaseInterval);
         if (views['home-page'] && !views['home-page'].classList.contains('hidden-view')) {
@@ -271,59 +295,63 @@ const particlesToggle = document.getElementById('particles-toggle');
         }
         localStorage.setItem('showcaseSpeed', e.target.value);
     });
+    
     navButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             const targetView = e.target.dataset.view;
             showView(targetView);
         });
     });
-// --- THIS IS THE CLICK HANDLER LOGIC ---
-        const handleGameClick = (url) => {
-            if (!url) return;
+    
+    // --- THIS IS THE CLICK HANDLER LOGIC ---
+    const handleGameClick = (url) => {
+        if (!url) return;
+        
+        // If it's a link to your own github.io page, load it in the iframe
+        if (url.startsWith('https://iisilly1059.github.io') || !url.startsWith('http')) {
             
-            // If it's a link to your own github.io page, load it in the iframe
-            if (url.startsWith('https://iisilly1059.github.io') || !url.startsWith('http')) {
-                
-                // Show the loader
-                gameLoader.classList.add('active'); 
-                gameIframe.src = url;
-                showView('game');
-                
-                // --- NEW CODE: Hide the loader after 3 seconds (3000ms) ---
-                setTimeout(() => {
-                    gameLoader.classList.remove('active');
-                }, 3000); // 3 seconds
-
-            } else {
-                // For external links (like krunker.io), open in a new tab
-                window.open(url, '_blank');
-            }
-        };
-
-        // --- THIS IS THE CLICK EVENT LISTENER ---
-        gameBoxes.forEach(box => {
-            box.addEventListener('click', () => {
-                handleGameClick(box.dataset.url);
-            });
+            // Show the loader
+            gameLoader.classList.add('active');
+            gameIframe.src = url;
+            showView('game');
+            
+            // --- NEW CODE: Hide the loader after 3 seconds (3000ms) ---
+            setTimeout(() => {
+                gameLoader.classList.remove('active');
+            }, 3000); // 3 seconds
+            
+        } else {
+            // For external links (like krunker.io), open in a new tab
+            window.open(url, '_blank');
+        }
+    };
+    
+    // --- THIS IS THE CLICK EVENT LISTENER ---
+    gameBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+            handleGameClick(box.dataset.url);
         });
-        // --- END OF CLICK LOGIC ---
-
-
-        // --- FULLSCREEN BUTTON ---
-        document.getElementById('fullscreen-btn-game').addEventListener('click', () => {
-            if (gameIframe.requestFullscreen) {
-                gameIframe.requestFullscreen();
-            } else if (gameIframe.mozRequestFullScreen) { // Firefox
-                gameIframe.mozRequestFullScreen();
-            } else if (gameIframe.webkitRequestFullscreen) { // Chrome, Safari, Opera
-                gameIframe.webkitRequestFullscreen();
-            } else if (gameIframe.msRequestFullscreen) { // IE/Edge
-                gameIframe.msRequestFullscreen();
-            }
-        });
-        // --- END OF FULLSCREEN BUTTON ---
+    });
+    // --- END OF CLICK LOGIC ---
+    
+    
+    // --- FULLSCREEN BUTTON ---
+    document.getElementById('fullscreen-btn-game').addEventListener('click', () => {
+        if (gameIframe.requestFullscreen) {
+            gameIframe.requestFullscreen();
+        } else if (gameIframe.mozRequestFullScreen) { // Firefox
+            gameIframe.mozRequestFullScreen();
+        } else if (gameIframe.webkitRequestFullscreen) { // Chrome, Safari, Opera
+            gameIframe.webkitRequestFullscreen();
+        } else if (gameIframe.msRequestFullscreen) { // IE/Edge
+            gameIframe.msRequestFullscreen();
+        }
+    });
+    // --- END OF FULLSCREEN BUTTON ---
+    
     const themeOptions = document.querySelectorAll('.theme-option');
     const body = document.body;
+    
     const applyTheme = (theme) => {
         body.setAttribute('data-theme', theme);
         localStorage.setItem('selectedTheme', theme);
@@ -335,13 +363,16 @@ const particlesToggle = document.getElementById('particles-toggle');
             startShootingStars();
         }
     };
+    
     themeOptions.forEach(option => {
         option.addEventListener('click', () => {
             applyTheme(option.dataset.theme);
         });
     });
+    
     const savedTheme = localStorage.getItem('selectedTheme') || 'dark';
     applyTheme(savedTheme);
+    
     const filterGames = (searchTerm) => {
         const lowerCaseSearch = searchTerm.toLowerCase();
         gameBoxWrapper.innerHTML = '';
@@ -362,15 +393,17 @@ const particlesToggle = document.getElementById('particles-toggle');
                     handleGameClick(clonedBox.dataset.url);
                 });
                 // --- END OF CLICK HANDLER ---
-
+                
                 currentRow.appendChild(clonedBox);
                 boxCount++;
             }
         });
     };
+    
     searchInput.addEventListener('input', (e) => {
         filterGames(e.target.value);
     });
+    
     const panicToggle = document.getElementById('panic-toggle');
     const panicOptions = document.getElementById('panic-options');
     const panicKeyInput = document.getElementById('panic-key-input');
@@ -383,18 +416,22 @@ const particlesToggle = document.getElementById('particles-toggle');
     const openAboutBlankBtn = document.getElementById('open-about-blank-btn');
     const homeAboutBlankBtn = document.getElementById('home-about-blank-btn');
     const resetSettingsBtn = document.getElementById('reset-settings');
+    
     let panicKey = null;
     let panicURL = 'https://docs.google.com';
+    
     const panicHandler = (event) => {
         if (panicToggle.checked && panicKey && event.key.toUpperCase() === panicKey) {
             window.location.replace(panicURL);
         }
     };
     document.addEventListener('keydown', panicHandler);
+    
     const loadSettings = () => {
         const savedPanicEnabled = localStorage.getItem('panicEnabled') === 'true';
         panicToggle.checked = savedPanicEnabled;
         panicOptions.classList.toggle('hidden', !savedPanicEnabled);
+        
         const savedPanicKey = localStorage.getItem('panicKey');
         if (savedPanicKey) {
             panicKey = savedPanicKey;
@@ -402,6 +439,7 @@ const particlesToggle = document.getElementById('particles-toggle');
         } else {
             panicKeyInput.value = '';
         }
+        
         const savedPanicUrl = localStorage.getItem('panicURL');
         if (savedPanicUrl) {
             panicURL = savedPanicUrl;
@@ -409,11 +447,13 @@ const particlesToggle = document.getElementById('particles-toggle');
         } else {
             panicUrlInput.value = panicURL;
         }
+        
         const savedTitle = localStorage.getItem('siteTitle');
         if (savedTitle) {
             document.title = savedTitle;
             siteTitleInput.value = savedTitle;
         }
+        
         const savedFavicon = localStorage.getItem('siteFavicon');
         if (savedFavicon) {
             const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
@@ -426,6 +466,7 @@ const particlesToggle = document.getElementById('particles-toggle');
             currentLogoSpan.textContent = 'none';
         }
     };
+    
     const saveSettings = () => {
         localStorage.setItem('panicEnabled', panicToggle.checked);
         if (panicKey) {
@@ -436,6 +477,7 @@ const particlesToggle = document.getElementById('particles-toggle');
             panicStatus.classList.remove('hidden');
             setTimeout(() => panicStatus.classList.add('hidden'), 2000);
         }
+        
         const newTitle = siteTitleInput.value.trim();
         if (newTitle) {
             document.title = newTitle;
@@ -452,9 +494,9 @@ const particlesToggle = document.getElementById('particles-toggle');
         if (newWindow) {
             try {
                 newWindow.document.write(`<html><head><title>${document.title}</title><link rel="shortcut icon" href="${document.querySelector("link[rel*='icon']") ? document.querySelector("link[rel*='icon']").href : 'none'}" type="image/x-icon"></head><body><iframe style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" src="${window.location.href}"></iframe></body></html>`);
-                // window.close(); // This line might be too aggressive and close your main window
+                // window.close(); // This line might be too aggressive
             } catch (e) {
-                newWindow.close(); 
+                newWindow.close();
                 alert("Could not open in about:blank. This might be blocked by your browser's security settings.");
             }
         } else {
@@ -462,7 +504,7 @@ const particlesToggle = document.getElementById('particles-toggle');
         }
     };
     // --- END OF 'about:blank' FIX ---
-
+    
     const handlePanicKeydown = (event) => {
         event.preventDefault();
         const key = event.key.toUpperCase();
@@ -475,14 +517,17 @@ const particlesToggle = document.getElementById('particles-toggle');
             panicKeyInput.value = '';
         }
     };
+    
     panicToggle.addEventListener('change', (e) => {
         panicOptions.classList.toggle('hidden', !e.target.checked);
         localStorage.setItem('panicEnabled', e.target.checked);
     });
+    
     panicKeyInput.addEventListener('focus', () => {
         panicKeyInput.value = 'Press a key (A-Z)...';
         panicKeyInput.addEventListener('keydown', handlePanicKeydown, { once: true });
     });
+    
     panicKeyInput.addEventListener('blur', () => {
         panicKeyInput.removeEventListener('keydown', handlePanicKeydown);
         if (panicKey) {
@@ -491,8 +536,10 @@ const particlesToggle = document.getElementById('particles-toggle');
             panicKeyInput.value = '';
         }
     });
+    
     savePanicBtn.addEventListener('click', saveSettings);
     siteTitleInput.addEventListener('input', saveSettings);
+    
     siteLogoInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -505,8 +552,10 @@ const particlesToggle = document.getElementById('particles-toggle');
             reader.readAsDataURL(file);
         }
     });
+    
     openAboutBlankBtn.addEventListener('click', openAboutBlank);
     homeAboutBlankBtn.addEventListener('click', openAboutBlank);
+    
     resetSettingsBtn.addEventListener('click', () => {
         if (confirm('Are you sure you want to reset all settings?')) {
             localStorage.removeItem('panicEnabled');
@@ -523,6 +572,7 @@ const particlesToggle = document.getElementById('particles-toggle');
             window.location.reload();
         }
     });
+    
     tabButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             tabButtons.forEach(b => b.classList.remove('active'));
@@ -531,17 +581,24 @@ const particlesToggle = document.getElementById('particles-toggle');
             document.getElementById(e.target.dataset.tab + '-tab').classList.add('active');
         });
     });
+    
     loadSettings();
     showView('home-page');
-});
-let lastCalledTime = Date.now();
-let fps = 0;
-let fpsDisplay = document.getElementById('fps');
-function updateFPS() {
-    const delta = (Date.now() - lastCalledTime) / 1000;
-    lastCalledTime = Date.now();
-    fps = Math.round(1 / delta);
-    fpsDisplay.textContent = `FPS: ${fps}`;
+    
+    // --- FPS COUNTER LOGIC (MOVED TO A SAFER PLACE) ---
+    let lastCalledTime = Date.now();
+    let fps = 0;
+    
+    function updateFPS() {
+        const delta = (Date.now() - lastCalledTime) / 1000;
+        lastCalledTime = Date.now();
+        fps = Math.round(1 / delta);
+        if (fpsDisplay) { // Check if fpsDisplay exists
+            fpsDisplay.textContent = `FPS: ${fps}`;
+        }
+        requestAnimationFrame(updateFPS);
+    }
     requestAnimationFrame(updateFPS);
-}
-requestAnimationFrame(updateFPS);
+    // --- END FPS COUNTER ---
+    
+});
