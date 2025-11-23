@@ -157,23 +157,17 @@ window.addEventListener('load', () => {
             this.x = x || Math.random() * canvas.width;
             this.y = y || Math.random() * canvas.height;
             this.radius = Math.random() * 1.5 + 0.5;
-            // this.color = 'rgba(255, 255, 255, 0.8)'; // Old color
+            this.color = 'rgba(255, 255, 255, 0.8)'; // Original color
             this.velocity = {
                 x: (Math.random() - 0.5) * 0.2,
                 y: (Math.random() - 0.5) * 0.2
             };
         }
         draw() {
-            // Get theme-aware color each frame
-            const computedStyle = getComputedStyle(document.body);
-            const particleColor = computedStyle.getPropertyValue('--color-text-main') || '#E5E7EB';
-            
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-            ctx.fillStyle = particleColor; // Use new theme color
-            ctx.globalAlpha = 0.8; // Set alpha
+            ctx.fillStyle = this.color;
             ctx.fill();
-            ctx.globalAlpha = 1.0; // Reset alpha
             ctx.closePath();
         }
         update() {
@@ -193,32 +187,21 @@ window.addEventListener('load', () => {
     
     const animateParticles = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Get theme-aware accent color once per frame
-        const computedStyle = getComputedStyle(document.body);
-        const accentColor = computedStyle.getPropertyValue('--color-accent-purple') || '#8B5CF6';
-
         for (let i = 0; i < particles.length; i++) {
             particles[i].update();
-            particles[i].draw(); // draw() now handles its own color
+            particles[i].draw();
             for (let j = i + 1; j < particles.length; j++) {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 if (distance < 100) {
                     ctx.beginPath();
-                    
-                    // Use theme-aware accent color for lines
-                    ctx.strokeStyle = accentColor;
-                    ctx.globalAlpha = (1 - distance / 100) * 0.5; // Make lines subtle
-                    
+                    ctx.strokeStyle = `rgba(139, 92, 246, ${1 - distance / 100})`; // Original color
                     ctx.lineWidth = 0.5;
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
                     ctx.stroke();
                     ctx.closePath();
-                    
-                    ctx.globalAlpha = 1.0; // Reset alpha
                 }
             }
         }
