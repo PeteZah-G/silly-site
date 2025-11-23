@@ -157,17 +157,23 @@ window.addEventListener('load', () => {
             this.x = x || Math.random() * canvas.width;
             this.y = y || Math.random() * canvas.height;
             this.radius = Math.random() * 1.5 + 0.5;
-            this.color = 'rgba(255, 255, 255, 0.8)';
+            // this.color = 'rgba(255, 255, 255, 0.8)'; // Old color
             this.velocity = {
                 x: (Math.random() - 0.5) * 0.2,
                 y: (Math.random() - 0.5) * 0.2
             };
         }
         draw() {
+            // Get theme-aware color each frame
+            const computedStyle = getComputedStyle(document.body);
+            const particleColor = computedStyle.getPropertyValue('--color-text-main') || '#E5E7EB';
+            
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-            ctx.fillStyle = this.color;
+            ctx.fillStyle = particleColor; // Use new theme color
+            ctx.globalAlpha = 0.8; // Set alpha
             ctx.fill();
+            ctx.globalAlpha = 1.0; // Reset alpha
             ctx.closePath();
         }
         update() {
@@ -187,21 +193,32 @@ window.addEventListener('load', () => {
     
     const animateParticles = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Get theme-aware accent color once per frame
+        const computedStyle = getComputedStyle(document.body);
+        const accentColor = computedStyle.getPropertyValue('--color-accent-purple') || '#8B5CF6';
+
         for (let i = 0; i < particles.length; i++) {
             particles[i].update();
-            particles[i].draw();
+            particles[i].draw(); // draw() now handles its own color
             for (let j = i + 1; j < particles.length; j++) {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 if (distance < 100) {
                     ctx.beginPath();
-                    ctx.strokeStyle = `rgba(139, 92, 246, ${1 - distance / 100})`;
+                    
+                    // Use theme-aware accent color for lines
+                    ctx.strokeStyle = accentColor;
+                    ctx.globalAlpha = (1 - distance / 100) * 0.5; // Make lines subtle
+                    
                     ctx.lineWidth = 0.5;
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
                     ctx.stroke();
                     ctx.closePath();
+                    
+                    ctx.globalAlpha = 1.0; // Reset alpha
                 }
             }
         }
@@ -428,7 +445,7 @@ window.addEventListener('load', () => {
         const savedPanicEnabled = localStorage.getItem('panicEnabled') === 'true';
         panicToggle.checked = savedPanicEnabled;
         panicOptions.classList.toggle('hidden', !savedPanicEnabled);
-        
+
         const savedPanicKey = localStorage.getItem('panicKey');
         if (savedPanicKey) {
             panicKey = savedPanicKey;
@@ -436,7 +453,7 @@ window.addEventListener('load', () => {
         } else {
             panicKeyInput.value = '';
         }
-        
+
         const savedPanicUrl = localStorage.getItem('panicURL');
         if (savedPanicUrl) {
             panicURL = savedPanicUrl;
@@ -444,13 +461,13 @@ window.addEventListener('load', () => {
         } else {
             panicUrlInput.value = panicURL;
         }
-        
+
         const savedTitle = localStorage.getItem('siteTitle');
         if (savedTitle) {
             document.title = savedTitle;
             siteTitleInput.value = savedTitle;
         }
-        
+
         const savedFavicon = localStorage.getItem('siteFavicon');
         if (savedFavicon) {
             const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
@@ -474,13 +491,13 @@ window.addEventListener('load', () => {
             panicStatus.classList.remove('hidden');
             setTimeout(() => panicStatus.classList.add('hidden'), 2000);
         }
-        
+
         const newTitle = siteTitleInput.value.trim();
         if (newTitle) {
             document.title = newTitle;
             localStorage.setItem('siteTitle', newTitle);
         } else {
-            document.title = "IMP GAMES"; // <-- Fixed title here
+            document.title = "IMP GAMES";
             localStorage.removeItem('siteTitle');
         }
     };
@@ -491,7 +508,6 @@ window.addEventListener('load', () => {
         if (newWindow) {
             try {
                 newWindow.document.write(`<html><head><title>${document.title}</title><link rel="shortcut icon" href="${document.querySelector("link[rel*='icon']") ? document.querySelector("link[rel*='icon']").href : 'none'}" type="image/x-icon"></head><body><iframe style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" src="${window.location.href}"></iframe></body></html>`);
-                // window.close(); // This line might be too aggressive
             } catch (e) {
                 newWindow.close();
                 alert("Could not open in about:blank. This might be blocked by your browser's security settings.");
