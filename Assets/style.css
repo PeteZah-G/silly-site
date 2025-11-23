@@ -64,15 +64,6 @@
     --color-bg-nav: rgba(0, 0, 51, 0.85);
     --color-bg-content: #191970;
 }
-[data-theme="sunset"] {
-    --color-accent-purple: #FF4500;
-    --color-accent-hover: #FF6347;
-    --color-text: #FFF;
-    --color-border: #FF8C00;
-    --color-bg: #2C001E;
-    --color-bg-nav: rgba(44, 0, 30, 0.85);
-    --color-bg-content: #4B0082;
-}
 [data-theme="forest"] {
     --color-accent-purple: #228B22;
     --color-accent-hover: #006400;
@@ -510,10 +501,6 @@ input:checked + .slider:before {
 .theme-option[data-theme="galaxy"] {
     background: linear-gradient(135deg, #000033 0%, #191970 50%, #483D8B 100%);
     color: #E6E6FA;
-}
-.theme-option[data-theme="sunset"] {
-    background: linear-gradient(135deg, #FF4500 0%, #FF8C00 50%, #4B0082 100%);
-    color: #fff;
 }
 .theme-option[data-theme="forest"] {
     background: linear-gradient(135deg, #013220 0%, #228B22 100%);
