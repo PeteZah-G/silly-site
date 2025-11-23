@@ -2,7 +2,7 @@
 :root {
     --color-accent-purple: #8B5CF6;
     --color-accent-hover: #7C3AED;
-    --color-text-main: #E5E7EB; /* Renamed */
+    --color-text: #E5E7EB;
     --color-border: #374151;
     --color-bg: #0B0F19;
     --color-bg-nav: rgba(17, 24, 39, 0.85);
@@ -13,25 +13,16 @@
 [data-theme="dark"] {
     --color-accent-purple: #8B5CF6;
     --color-accent-hover: #7C3AED;
-    --color-text-main: #E5E7EB; /* Renamed */
+    --color-text: #E5E7EB;
     --color-border: #374151;
     --color-bg: #0B0F19;
     --color-bg-nav: rgba(17, 24, 39, 0.85);
     --color-bg-content: #111827;
 }
-[data-theme="light"] {
-    --color-accent-purple: #6200ee;
-    --color-accent-hover: #5200c7;
-    --color-text-main: #1a1a1a; /* Renamed */
-    --color-border: #e0e0e0;
-    --color-bg: #f5f5f5;
-    --color-bg-nav: rgba(255, 255, 255, 0.85);
-    --color-bg-content: #ffffff;
-}
 [data-theme="cotton-candy"] {
     --color-accent-purple: #FF69B4;
     --color-accent-hover: #FF1493;
-    --color-text-main: #333; /* Renamed */
+    --color-text: #333;
     --color-border: #FFB6C1;
     --color-bg: #FFF0F5;
     --color-bg-nav: rgba(255, 240, 245, 0.85);
@@ -40,7 +31,7 @@
 [data-theme="hacker"] {
     --color-accent-purple: #00FF00;
     --color-accent-hover: #00CC00;
-    --color-text-main: #00FF00; /* Renamed */
+    --color-text: #00FF00;
     --color-border: #003300;
     --color-bg: #000000;
     --color-bg-nav: rgba(0, 0, 0, 0.85);
@@ -49,7 +40,7 @@
 [data-theme="neon"] {
     --color-accent-purple: #00FFFF;
     --color-accent-hover: #00E5E5;
-    --color-text-main: #00FFFF; /* Renamed */
+    --color-text: #00FFFF;
     --color-border: #FF00FF;
     --color-bg: #000022;
     --color-bg-nav: rgba(0, 0, 34, 0.85);
@@ -58,7 +49,7 @@
 [data-theme="galaxy"] {
     --color-accent-purple: #9370DB;
     --color-accent-hover: #8A2BE2;
-    --color-text-main: #E6E6FA; /* Renamed */
+    --color-text: #E6E6FA;
     --color-border: #483D8B;
     --color-bg: #000033;
     --color-bg-nav: rgba(0, 0, 51, 0.85);
@@ -67,36 +58,18 @@
 [data-theme="forest"] {
     --color-accent-purple: #228B22;
     --color-accent-hover: #006400;
-    --color-text-main: #F0FFF0; /* Renamed */
+    --color-text: #F0FFF0;
     --color-border: #006400;
     --color-bg: #013220;
     --color-bg-nav: rgba(1, 50, 32, 0.85);
     --color-bg-content: #004225;
-}
-[data-theme="ocean"] {
-    --color-accent-purple: #00bcd4; /* Cyan accent */
-    --color-accent-hover: #0097a7;
-    --color-text-main: #e0f7fa; /* Renamed */
-    --color-border: #004d40;
-    --color-bg: #001f3f; /* Deep navy */
-    --color-bg-nav: rgba(0, 31, 63, 0.85);
-    --color-bg-content: #00152b;
-}
-[data-theme="fire"] {
-    --color-accent-purple: #ff4500; /* Orange-red accent */
-    --color-accent-hover: #e63e00;
-    --color-text-main: #fffaf0; /* Renamed */
-    --color-border: #8b0000; /* Dark red */
-    --color-bg: #121212; /* Very dark gray */
-    --color-bg-nav: rgba(18, 18, 18, 0.85);
-    --color-bg-content: #221a1a;
 }
 /* --- END THEMES --- */
 
 
 body {
     background-color: var(--color-bg);
-    color: var(--color-text-main); /* Renamed */
+    color: var(--color-text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -135,7 +108,7 @@ nav {
 }
 
 .nav-button {
-    color: var(--color-text-main); /* Renamed */
+    color: var(--color-text);
     transition: background-color 0.2s, color 0.2s;
     opacity: 0.8;
 }
@@ -178,7 +151,7 @@ nav {
 .typewriter-container {
     font-size: 3rem;
     font-weight: 700;
-    color: var(--color-text-main); /* Renamed */
+    color: var(--color-text);
 }
 .static-text {
     margin-right: 0.5rem;
@@ -251,7 +224,7 @@ nav {
     transform: translateX(-50%);
     background-color: var(--color-bg-content);
     border: 1px solid var(--color-border);
-    color: var(--color-text-main); /* Renamed */
+    color: var(--color-text);
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     transition: all 0.2s;
@@ -276,7 +249,7 @@ nav {
     top: 50%;
     left: 1rem;
     transform: translateY(-50%);
-    color: var(--color-text-main); /* Renamed */
+    color: var(--color-text);
     opacity: 0.5;
 }
 #game-search {
@@ -285,7 +258,7 @@ nav {
     border-radius: 9999px;
     background-color: var(--color-bg);
     border: 1px solid var(--color-border);
-    color: var(--color-text-main); /* Renamed */
+    color: var(--color-text);
     font-size: 1rem;
     outline: none;
     transition: all 0.2s;
@@ -331,7 +304,7 @@ nav {
     padding: 0.75rem;
     text-align: center;
     font-weight: 500;
-    color: var(--color-text-main); /* Renamed */
+    color: var(--color-text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -387,7 +360,7 @@ nav {
     text-align: left;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
-    color: var(--color-text-main); /* Renamed */
+    color: var(--color-text);
     opacity: 0.7;
     font-weight: 500;
     transition: all 0.2s;
@@ -506,26 +479,13 @@ input:checked + .slider:before {
     background: linear-gradient(135deg, #013220 0%, #228B22 100%);
     color: #F0FFF0;
 }
-.theme-option[data-theme="light"] {
-    background: #f5f5f5;
-    color: #1a1a1a;
-    border: 1px solid #e0e0e0;
-}
-.theme-option[data-theme="ocean"] {
-    background: linear-gradient(135deg, #001f3f 0%, #00bcd4 100%);
-    color: #e0f7fa;
-}
-.theme-option[data-theme="fire"] {
-    background: linear-gradient(135deg, #121212 0%, #ff4500 100%);
-    color: #fffaf0;
-}
 .panic-input {
     width: 100%;
     padding: 0.5rem 0.75rem;
     border-radius: 0.375rem;
     background-color: var(--color-bg);
     border: 1px solid var(--color-border);
-    color: var(--color-text-main); /* Renamed */
+    color: var(--color-text);
 }
 .save-btn {
     background-color: var(--color-accent-purple);
@@ -582,7 +542,7 @@ input:checked + .slider:before {
     justify-content: center;
     align-items: center;
     z-index: 1001; /* Above iframe, below fullscreen btn */
-    color: var(--color-text-main); /* Renamed */
+    color: var(--color-text);
     font-size: 1.2rem;
     gap: 1rem;
 }
@@ -601,7 +561,4 @@ input:checked + .slider:before {
     to {
         transform: rotate(360deg);
     }
-}
-.hidden-view {
-    display: none;
 }
