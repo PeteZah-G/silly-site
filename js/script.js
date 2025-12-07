@@ -315,12 +315,13 @@ window.addEventListener('load', () => {
             gameIframe.src = url;
             showView('game');
             
-            // --- Hide the loader after 10 seconds---
+            // --- Hide the loader after 5 seconds (5000ms) ---
             setTimeout(() => {
                 gameLoader.classList.remove('active');
-            }, 10000); // 10seconds
+            }, 5000); // 5seconds
             
         } else {
+            // For external links (like krunker.io), open in a new tab
             window.open(url, '_blank');
         }
     };
@@ -651,4 +652,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initPageFade();
   // Call your original init if any (e.g., load active tab)
   openTab('games', {target: document.querySelector('.tab-button[onclick*="games"]')}); // Default to games tab
+});
+// button that opens the game in a new tab ty petezah for telling me
+document.getElementById('newtab-btn-game').addEventListener('click', () => {
+    const gameUrl = document.getElementById('game-iframe').src;
+    if (gameUrl && gameUrl !== '') {
+        window.open(gameUrl, '_blank');
+    }
 });
