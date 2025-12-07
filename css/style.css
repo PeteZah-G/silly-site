@@ -347,7 +347,7 @@ body { background: var(--color-primary-bg) !important; }
     --color-secondary-bg: rgba(10, 10, 40, 0.7);
     --color-accent-main: #ef4444;
     --color-accent-hover: #dc2626;
-    --color-text: #fefce8;
+    --color-text: #fefce8
     !important;
     --color-border: #22c55e;
 }
@@ -653,20 +653,30 @@ body::-webkit-scrollbar {
     width: 0;
     height: 0;
 }
-/* so this is for the buttons on the games */
-#game-view button {
-    position: absolute;
-    top: 16px;
-    z-index: 10;
-    background: rgba(31, 41, 55, 0.9);
-    color: white;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    transition: 0.2s;
-}
 
-#newtab-btn-game       { left: 16px; }
-#fullscreen-btn-game   { right: 16px; }
-#game-view button:hover { background: rgba(0, 0, 0, 0.95); transform: scale(1.1); }
+.favorite-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 10;
+}
+.game-box:hover .favorite-btn { opacity: 1; }
+.favorite-btn i { font-size: 14px; color: #fff; }
+.favorite-btn.favorited i { color: #ff006e; }
+.favorite-btn.favorited::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,0,110,0.2);
+    border-radius: 50%;
+}
