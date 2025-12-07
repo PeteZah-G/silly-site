@@ -1,7 +1,7 @@
 Imp Games – README
 
 Games
-150+ games (and counting) that load instantly – we only have a 10s game loading spinner to load your selected game.
+150+ games that load instantly – we only have a 10s game loading spinner to load your selected game.
 
 Ads & Privacy
 Zero ads, zero popups, zero sign-up, – we respect your time.
